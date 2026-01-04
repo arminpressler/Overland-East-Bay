@@ -1,0 +1,50 @@
+/* --- Calendar Page Specifics --- */
+
+.calendar-qtr {
+    color: var(--accent);
+    margin-top: var(--spacing-xl);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: var(--spacing-sm);
+}
+
+.calendar-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.calendar-item {
+    background-color: rgba(255, 255, 255, 0.03);
+    padding: var(--spacing-md);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius-sm);
+    transition: transform 0.2s ease;
+}
+
+.calendar-item:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    transform: translateX(4px);
+}
+
+.calendar-date {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.calendar-desc {
+    color: var(--text-main);
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .calendar-list {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+}

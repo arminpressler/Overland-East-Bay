@@ -1,0 +1,145 @@
+/* Trip RSVP Module */
+/* Gemini: created 2025-12-30 - RSVP status and member list display module */
+
+.trip-rsvp {
+    border: 1px solid var(--accent);
+    background: var(--surface-card);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    margin: 2rem 0;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.trip-rsvp .tr-header {
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-color, #ddd);
+}
+
+.trip-rsvp .tr-kicker {
+    font-size: 12px;
+    color: var(--text-secondary);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
+
+.trip-rsvp .tr-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0;
+    color: var(--text-primary);
+}
+
+.trip-rsvp .tr-capacity {
+    margin: 16px 0;
+    padding: 16px;
+    background: rgba(var(--accent-rgb, 255, 107, 0), 0.05);
+    border-radius: var(--radius-md);
+}
+
+.trip-rsvp .tr-capacity-bar {
+    height: 8px;
+    background: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 8px 0;
+}
+
+.trip-rsvp .tr-capacity-fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.3s ease;
+}
+
+.trip-rsvp .tr-capacity-fill.full {
+    background: #dc3545;
+}
+
+.trip-rsvp .tr-capacity-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-align: center;
+}
+
+.trip-rsvp .tr-section {
+    margin-top: 20px;
+}
+
+.trip-rsvp .tr-section-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.trip-rsvp .tr-count-badge {
+    background: var(--accent);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.trip-rsvp .tr-member-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 8px;
+}
+
+.trip-rsvp .tr-member {
+    padding: 8px 12px;
+    background: var(--surface-card);
+    border: 1px solid var(--border-color, #ddd);
+    border-radius: var(--radius-sm, 4px);
+    font-size: 14px;
+    color: var(--text-primary);
+}
+
+.trip-rsvp .tr-member.attending {
+    background: rgba(40, 167, 69, 0.1);
+    border-color: #28a745;
+}
+
+.trip-rsvp .tr-member.not-attending {
+    background: rgba(220, 53, 69, 0.05);
+    border-color: #dc3545;
+    opacity: 0.7;
+}
+
+.trip-rsvp .tr-empty {
+    padding: 16px;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-style: italic;
+}
+
+.trip-rsvp .tr-loading {
+    text-align: center;
+    padding: 20px;
+    color: var(--text-secondary);
+}
+
+.trip-rsvp .tr-error {
+    padding: 12px;
+    background-color: rgba(220, 53, 69, 0.1);
+    border-left: 4px solid #dc3545;
+    border-radius: var(--radius-md);
+    color: #b91c1c;
+    font-size: 14px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .trip-rsvp .tr-member-list {
+        grid-template-columns: 1fr;
+    }
+}
