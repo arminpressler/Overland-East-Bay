@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Overland East Bay — Widgets Demo</title>
+  <meta name="description" content="Static-friendly widgets demo (auth + RSVP)." />
+  <style>
+    :root {
+      color-scheme: light dark;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      margin: 0;
+      padding: 2rem;
+    }
+
+    main {
+      max-width: 48rem;
+      margin: 0 auto;
+    }
+
+    .card {
+      border: 1px solid rgba(127, 127, 127, .3);
+      border-radius: 12px;
+      padding: 1.25rem;
+    }
+
+    .row {
+      display: flex;
+      gap: .75rem;
+      flex-wrap: wrap;
+    }
+
+    .widget-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .ebox {
+      border: 1px solid rgba(127, 127, 127, .3);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+
+    .ebo-auth-button,
+    .ebo-rsvp-button,
+    .ebo-rsvp-choice {
+      font: inherit;
+      padding: .55rem .85rem;
+      border-radius: 10px;
+      border: 1px solid rgba(127, 127, 127, .4);
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .ebo-auth-button:hover,
+    .ebo-rsvp-button:hover,
+    .ebo-rsvp-choice:hover {
+      border-color: rgba(127, 127, 127, .7);
+    }
+
+    .ebo-rsvp-chooser {
+      margin-top: .5rem;
+      display: flex;
+      gap: .5rem;
+      flex-wrap: wrap;
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    .muted {
+      opacity: .8;
+    }
+  </style>
+  <!-- Cloudflare Web Analytics -->
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js'
+    data-cf-beacon='{"token": "933e079b3a424ffc98c6ce8278414d20"}'></script><!-- End Cloudflare Web Analytics -->
+</head>
+
+<body>
+  <main>
+    <h1>Overland East Bay</h1>
+    <p class="muted" style="margin: 0;">Static-friendly widgets demo: auth status + RSVP for a specific trip.</p>
+
+    <div class="ebox">
+      <div class="widget-row">
+        <div>
+          <div class="muted" style="font-size: .9rem;">Auth widget</div>
+          <div style="font-weight: 600;">Member session</div>
+        </div>
+        <span data-ebo-auth-status></span>
+      </div>
+    </div>
+
+    <div class="ebox">
+      <div class="widget-row">
+        <div>
+          <div class="muted" style="font-size: .9rem;">Trip RSVP widget</div>
+          <div style="font-weight: 600;">My RSVP</div>
+          <div class="muted" style="margin-top: .25rem;">
+            Trip id placeholder: <code>REPLACE_ME_TRIP_ID</code>
+          </div>
+        </div>
+        <div data-ebo-trip-rsvp data-trip-id="REPLACE_ME_TRIP_ID"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Widgets (plain JS, no SPA required) -->
+  <script defer src="/assets/ebo-auth-widget.js"></script>
+  <script defer src="/assets/ebo-trip-rsvp-widget.js"></script>
+</body>
+
+</html>
