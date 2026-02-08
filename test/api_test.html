@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- pagetype: test -->
+<!-- Gemini: created 2026-01-05 - API Interface Test Harness -->
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Test harness for EBO API Interface class.">
+    <title>API Test Harness | Overland EastBay</title>
+
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="stylesheet" href="/css/hero.css?v=20260205193800">
+    <link rel="stylesheet" href="/css/style.css?v=20260205193800">
+    <style>
+        /* Gemini: created 2026-01-05 - Local styles for test harness */
+        .test-section {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .test-section h3 {
+            margin-top: 0;
+            color: var(--accent);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .test-controls {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .test-controls button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+
+        .test-controls button.primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .test-controls button.primary:hover {
+            background: var(--accent-hover);
+        }
+
+        .test-controls button.secondary {
+            background: var(--bg-secondary);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+
+        .test-controls button.secondary:hover {
+            background: var(--border-color);
+        }
+
+        .test-input {
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background: var(--bg-main);
+            color: var(--text-main);
+            min-width: 300px;
+        }
+
+        .console-output {
+            background: #1a1a2e;
+            color: #00ff00;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.85rem;
+            padding: 1rem;
+            border-radius: 4px;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .console-output .timestamp {
+            color: #888;
+        }
+
+        .console-output .success {
+            color: #00ff00;
+        }
+
+        .console-output .error {
+            color: #ff4444;
+        }
+
+        .console-output .info {
+            color: #4488ff;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+
+        .status-indicator.success {
+            background: #00ff00;
+        }
+
+        .status-indicator.error {
+            background: #ff4444;
+        }
+
+        .status-indicator.pending {
+            background: #ffaa00;
+        }
+
+        .result-card {
+            background: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: 4px;
+            margin-top: 1rem;
+        }
+
+        .result-card pre {
+            margin: 0;
+            overflow-x: auto;
+        }
+    </style>
+    <!-- Cloudflare Web Analytics -->
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js'
+        data-cf-beacon='{"token": "933e079b3a424ffc98c6ce8278414d20"}'></script><!-- End Cloudflare Web Analytics -->
+</head>
+
+<body>
+    <header>
+        <script src="/js/test_nav.js?v=20260205193800"></script>
+    </header>
+
+    <div class="hero" style="background-image: url('/images/index.hero.jpg');">
+        <div class="hero-content">
+            <h1 class="hero-title">API Test Harness</h1>
+            <p class="hero-subtitle">Interactive testing for EBOApiClient</p>
+        </div>
+    </div>
+
+    <main class="content-container">
+        <p style="color: var(--text-muted); margin-bottom: 2rem;">
+            This page tests the <code>window.eboApi</code> client. Open browser DevTools (F12) for additional console
+            output.
+        </p>
+
+        <!-- Config Test Section -->
+        <div class="test-section">
+            <h3>📋 Configuration</h3>
+            <p style="color: var(--text-muted); margin-bottom: 1rem;">
+                Tests config loading and caching. Multiple calls should only fetch once.
+            </p>
+            <div class="test-controls">
+                <button class="primary" onclick="testConfig()">Load Config</button>
+                <button class="secondary" onclick="testConfigCache()">Test Cache (2x)</button>
+            </div>
+            <div class="console-output" id="config-output">Ready...</div>
+        </div>
+
+        <!-- Trip Endpoints Section -->
+        <div class="test-section">
+            <h3>🏕️ Trip Endpoints</h3>
+            <p style="color: var(--text-muted); margin-bottom: 1rem;">
+                Test trip-related API endpoints.
+            </p>
+            <div class="test-controls">
+                <input type="text" id="trip-id-input" class="test-input" value="f3d2a79f-5ee8-48b9-b61f-aed07aeb35fa"
+                    placeholder="Enter Trip ID">
+            </div>
+            <div class="test-controls">
+                <button class="primary" onclick="testGetTrip()">Get Trip</button>
+                <button class="primary" onclick="testGetRsvpSummary()">Get RSVP Summary</button>
+                <button class="secondary" onclick="testListTrips()">List Trips</button>
+            </div>
+            <div class="console-output" id="trip-output">Ready...</div>
+        </div>
+
+        <!-- Member Endpoints Section -->
+        <div class="test-section">
+            <h3>👤 Member Endpoints</h3>
+            <p style="color: var(--text-muted); margin-bottom: 1rem;">
+                Test member-related API endpoints.
+            </p>
+            <div class="test-controls">
+                <button class="primary" onclick="testGetMyProfile()">Get My Profile</button>
+                <button class="secondary" onclick="testListMembers()">List Members</button>
+            </div>
+            <div class="console-output" id="member-output">Ready...</div>
+        </div>
+
+        <!-- Error Handling Section -->
+        <div class="test-section">
+            <h3>⚠️ Error Handling</h3>
+            <p style="color: var(--text-muted); margin-bottom: 1rem;">
+                Test error scenarios and exception handling.
+            </p>
+            <div class="test-controls">
+                <button class="primary" onclick="testInvalidTrip()">Get Invalid Trip</button>
+                <button class="secondary" onclick="testInvalidEndpoint()">Invalid Endpoint</button>
+            </div>
+            <div class="console-output" id="error-output">Ready...</div>
+        </div>
+
+        <!-- Utilities Section -->
+        <div class="test-section">
+            <h3>🔧 Utilities (EBOUtils)</h3>
+            <p style="color: var(--text-muted); margin-bottom: 1rem;">
+                Test shared utility functions.
+            </p>
+            <div class="test-controls">
+                <button class="primary" onclick="testUtilities()">Run All Utility Tests</button>
+            </div>
+            <div class="console-output" id="utils-output">Ready...</div>
+        </div>
+
+        <p style="margin-top: 2rem;">
+            <a href="index.html">← Back to Test Index</a>
+        </p>
+    </main>
+
+    <footer>
+        <script src="/js/footer.js?v=20260205193800"></script>
+    </footer>
+
+    <!-- Load API Interface and Utils -->
+    <script src="/js/api_interface.js?v=20260205193800"></script>
+    <script src="/js/utils.js?v=20260205193800"></script>
+
+    <script>
+        // Gemini: created 2026-01-05 - Test harness functions
+
+        /**
+         * Log output to a console panel
+         * @param {string} panelId - ID of the output panel
+         * @param {string} message - Message to log
+         * @param {string} type - Message type (success, error, info)
+         */
+        function log(panelId, message, type = 'info') {
+            const panel = document.getElementById(panelId);
+            const timestamp = new Date().toLocaleTimeString();
+            const typeClass = type;
+            panel.innerHTML += `<span class="timestamp">[${timestamp}]</span> <span class="${typeClass}">${message}</span>\n`;
+            panel.scrollTop = panel.scrollHeight;
+        }
+
+        /**
+         * Clear a console panel
+         * @param {string} panelId - ID of the output panel
+         */
+        function clearPanel(panelId) {
+            document.getElementById(panelId).innerHTML = '';
+        }
+
+        // ============ CONFIG TESTS ============
+
+        async function testConfig() {
+            clearPanel('config-output');
+            log('config-output', 'Loading config...', 'info');
+            try {
+                const config = await window.eboApi.getConfig();
+                log('config-output', '✓ Config loaded successfully', 'success');
+                log('config-output', `  apiHost: ${config.apiHost}`, 'info');
+                log('config-output', `  debugSubject: ${config.headers?.debugSubject || 'not set'}`, 'info');
+            } catch (err) {
+                log('config-output', `✗ Error: ${err.message}`, 'error');
+            }
+        }
+
+        async function testConfigCache() {
+            clearPanel('config-output');
+            log('config-output', 'Testing config cache (2 sequential calls)...', 'info');
+
+            const start1 = performance.now();
+            const config1 = await window.eboApi.getConfig();
+            const end1 = performance.now();
+            log('config-output', `  Call 1: ${(end1 - start1).toFixed(2)}ms`, 'info');
+
+            const start2 = performance.now();
+            const config2 = await window.eboApi.getConfig();
+            const end2 = performance.now();
+            log('config-output', `  Call 2: ${(end2 - start2).toFixed(2)}ms`, 'info');
+
+            if (config1 === config2) {
+                log('config-output', '✓ Same object returned (cached)', 'success');
+            } else {
+                log('config-output', '⚠ Different objects returned', 'error');
+            }
+        }
+
+        // ============ TRIP TESTS ============
+
+        function getTripId() {
+            return document.getElementById('trip-id-input').value.trim();
+        }
+
+        async function testGetTrip() {
+            clearPanel('trip-output');
+            const tripId = getTripId();
+            log('trip-output', `Fetching trip: ${tripId}...`, 'info');
+            try {
+                const trip = await window.eboApi.getTrip(tripId);
+                log('trip-output', '✓ Trip loaded successfully', 'success');
+                log('trip-output', `  Name: ${trip.name}`, 'info');
+                log('trip-output', `  Status: ${trip.status}`, 'info');
+                log('trip-output', `  Dates: ${trip.startDate} to ${trip.endDate}`, 'info');
+                log('trip-output', `  Organizers: ${trip.organizers?.map(o => o.displayName).join(', ') || 'none'}`, 'info');
+                console.log('Trip details:', trip);
+            } catch (err) {
+                log('trip-output', `✗ Error: ${err.message}`, 'error');
+                if (err.statusCode) {
+                    log('trip-output', `  Status Code: ${err.statusCode}`, 'error');
+                }
+            }
+        }
+
+        async function testGetRsvpSummary() {
+            clearPanel('trip-output');
+            const tripId = getTripId();
+            log('trip-output', `Fetching RSVP summary for: ${tripId}...`, 'info');
+            try {
+                const data = await window.eboApi.getRsvpSummary(tripId);
+                const summary = data.rsvpSummary;
+                log('trip-output', '✓ RSVP summary loaded', 'success');
+                log('trip-output', `  Attending: ${summary?.attendingMembers?.length || 0}`, 'info');
+                log('trip-output', `  Not Attending: ${summary?.notAttendingMembers?.length || 0}`, 'info');
+                log('trip-output', `  Capacity: ${summary?.capacityRigs || 'N/A'} rigs`, 'info');
+                console.log('RSVP Summary:', data);
+            } catch (err) {
+                log('trip-output', `✗ Error: ${err.message}`, 'error');
+            }
+        }
+
+        async function testListTrips() {
+            clearPanel('trip-output');
+            log('trip-output', 'Listing all trips...', 'info');
+            try {
+                const trips = await window.eboApi.listTrips();
+                log('trip-output', `✓ Found ${trips.length} trips`, 'success');
+                trips.slice(0, 5).forEach(t => {
+                    log('trip-output', `  • ${t.name} (${t.status})`, 'info');
+                });
+                if (trips.length > 5) {
+                    log('trip-output', `  ... and ${trips.length - 5} more`, 'info');
+                }
+                console.log('All trips:', trips);
+            } catch (err) {
+                log('trip-output', `✗ Error: ${err.message}`, 'error');
+            }
+        }
+
+        // ============ MEMBER TESTS ============
+
+        async function testGetMyProfile() {
+            clearPanel('member-output');
+            log('member-output', 'Fetching my profile...', 'info');
+            try {
+                const member = await window.eboApi.getMyProfile();
+                log('member-output', '✓ Profile loaded', 'success');
+                log('member-output', `  Display Name: ${member.displayName}`, 'info');
+                log('member-output', `  Email: ${member.email}`, 'info');
+                log('member-output', `  Member ID: ${member.memberId}`, 'info');
+                console.log('My profile:', member);
+            } catch (err) {
+                log('member-output', `✗ Error: ${err.message}`, 'error');
+                if (err.statusCode === 404) {
+                    log('member-output', '  (Member not provisioned)', 'info');
+                }
+            }
+        }
+
+        async function testListMembers() {
+            clearPanel('member-output');
+            log('member-output', 'Listing members...', 'info');
+            try {
+                const members = await window.eboApi.listMembers();
+                log('member-output', `✓ Found ${members.length} members`, 'success');
+                members.slice(0, 5).forEach(m => {
+                    log('member-output', `  • ${m.displayName}`, 'info');
+                });
+                if (members.length > 5) {
+                    log('member-output', `  ... and ${members.length - 5} more`, 'info');
+                }
+                console.log('All members:', members);
+            } catch (err) {
+                log('member-output', `✗ Error: ${err.message}`, 'error');
+            }
+        }
+
+        // ============ ERROR TESTS ============
+
+        async function testInvalidTrip() {
+            clearPanel('error-output');
+            log('error-output', 'Fetching invalid trip ID...', 'info');
+            try {
+                await window.eboApi.getTrip('invalid-trip-id-12345');
+                log('error-output', '⚠ Expected error but got success', 'error');
+            } catch (err) {
+                log('error-output', '✓ Error caught as expected', 'success');
+                log('error-output', `  Type: ${err.name}`, 'info');
+                log('error-output', `  Status: ${err.statusCode}`, 'info');
+                log('error-output', `  Message: ${err.message}`, 'info');
+            }
+        }
+
+        async function testInvalidEndpoint() {
+            clearPanel('error-output');
+            log('error-output', 'Calling invalid endpoint...', 'info');
+            try {
+                await window.eboApi.request('/this/endpoint/does/not/exist');
+                log('error-output', '⚠ Expected error but got success', 'error');
+            } catch (err) {
+                log('error-output', '✓ Error caught as expected', 'success');
+                log('error-output', `  Type: ${err.name}`, 'info');
+                log('error-output', `  Status: ${err.statusCode}`, 'info');
+            }
+        }
+
+        // ============ UTILITY TESTS ============
+
+        function testUtilities() {
+            clearPanel('utils-output');
+            log('utils-output', 'Testing EBOUtils...', 'info');
+
+            // escapeHtml - use string concat to avoid HTML parser issues
+            const escaped = EBOUtils.escapeHtml('<div onclick="alert()">test</div>');
+            const escapeTest = escaped.includes('&lt;') && escaped.includes('&gt;');
+            log('utils-output', `escapeHtml: ${escapeTest ? '✓' : '✗'} ${escaped}`, escapeTest ? 'success' : 'error');
+
+            // formatDate
+            const formattedDate = EBOUtils.formatDate('2026-02-15');
+            log('utils-output', `formatDate: ✓ ${formattedDate}`, 'success');
+
+            // formatDateRange
+            const formattedRange = EBOUtils.formatDateRange('2026-02-15', '2026-02-17');
+            log('utils-output', `formatDateRange: ✓ ${formattedRange}`, 'success');
+
+            // createMapsUrl
+            const mapsUrl = EBOUtils.createMapsUrl({ latitude: 37.7749, longitude: -122.4194 });
+            const mapsTest = mapsUrl && mapsUrl.includes('google.com/maps');
+            log('utils-output', `createMapsUrl: ${mapsTest ? '✓' : '✗'} URL generated`, mapsTest ? 'success' : 'error');
+
+            // maskEmail
+            const masked = EBOUtils.maskEmail('johndoe@example.com');
+            log('utils-output', `maskEmail: ✓ ${masked}`, 'success');
+
+            // getStatusClass
+            const statusClass = EBOUtils.getStatusClass('Going');
+            log('utils-output', `getStatusClass: ✓ ${statusClass}`, 'success');
+
+            log('utils-output', '', 'info');
+            log('utils-output', 'All utility tests complete!', 'success');
+        }
+
+        // Log initial state
+        console.log('API Test Harness loaded');
+        console.log('window.eboApi:', window.eboApi);
+        console.log('window.EBOUtils:', window.EBOUtils);
+    </script>
+</body>
+
+</html>
