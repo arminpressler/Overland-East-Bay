@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- pagetype: test -->
+<!-- Gemini: updated 2026-02-05 - Web BFF API Explorer -->
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Test harness for Web BFF API.">
+    <title>Web BFF API Explorer | Overland EastBay</title>
+
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="stylesheet" href="/css/hero.css?v=20260205193800">
+    <link rel="stylesheet" href="/css/style.css?v=20260205193800">
+    <style>
+        /* Gemini: local styles API explorer */
+        .api-section {
+            background: var(--card-bg);
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .api-section-header {
+            padding: 1rem 1.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .api-section-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: var(--accent);
+        }
+
+        .api-section-header p {
+            margin: 0.5rem 0 0;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .endpoint-card {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .endpoint-card:last-child {
+            border-bottom: none;
+        }
+
+        .method-badge {
+            display: inline-block;
+            font-weight: 900;
+            font-size: 0.9rem;
+            margin-right: 0.5rem;
+            text-transform: uppercase;
+            /* No background, looks like text */
+            padding: 0;
+        }
+
+        .method-GET {
+            color: #61affe;
+        }
+
+        .method-POST {
+            color: #49cc90;
+        }
+
+        .method-PUT {
+            color: #fca130;
+        }
+
+        .method-DELETE {
+            color: #f93e3e;
+        }
+
+        .endpoint-path {
+            font-family: monospace;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--text-main);
+        }
+
+        .endpoint-desc {
+            margin: 0.5rem 0 1rem;
+            color: var(--text-muted);
+            white-space: pre-line;
+            font-size: 0.9rem;
+        }
+
+        /* Action Buttons Styling */
+        button,
+        .button {
+            cursor: pointer;
+            padding: 0.6rem 1.2rem;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: inline-block;
+            transition: opacity 0.2s;
+            border: none;
+        }
+
+        button:hover,
+        .button:hover {
+            opacity: 0.9;
+        }
+
+        .primary {
+            background-color: var(--accent, #fca130);
+            color: #000;
+        }
+
+        .secondary {
+            background-color: var(--bg-secondary, #333);
+            border: 1px solid var(--border-color, #555);
+            color: var(--text-main, #eee);
+        }
+
+        .danger {
+            background-color: #f93e3e;
+            color: white;
+        }
+
+        .params-container {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .param-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .param-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .param-label {
+            min-width: 140px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .param-input {
+            flex: 1;
+            padding: 0.6rem;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-main);
+            color: var(--text-main);
+            font-family: monospace;
+        }
+
+        .action-bar {
+            margin-top: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .console-output {
+            background: #1a1a2e;
+            color: #00ff00;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.85rem;
+            padding: 1rem;
+            border-radius: 4px;
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+            margin-top: 1rem;
+            display: none;
+            /* Hidden by default */
+        }
+
+        .console-output.visible {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <script src="/js/test_nav.js?v=20260205193800"></script>
+    </header>
+
+    <div class="hero" style="background-image: url('/images/index.hero.jpg');">
+        <div class="hero-content">
+            <h1 class="hero-title">Web BFF API Explorer</h1>
+            <p class="hero-subtitle">Interactive documentation and testing</p>
+        </div>
+    </div>
+
+    <main class="content-container">
+
+        <!-- Global Config -->
+        <div class="api-section">
+            <div class="api-section-header">
+                <h2>Global Configuration</h2>
+                <p>Base settings for all requests.</p>
+            </div>
+            <div class="endpoint-card">
+                <div class="params-container">
+                    <div class="param-row">
+                        <span class="param-label">Base URL</span>
+                        <input type="text" id="api-base-url" class="param-input" value=""
+                            placeholder="Leave empty for local proxy (or full URL)">
+                    </div>
+                    <div class="param-row">
+                        <span class="param-label">Global ReturnTo</span>
+                        <input type="text" id="global-return-to" class="param-input" value="/test/web_bff_test.html"
+                            placeholder="Optional return path">
+                    </div>
+                    <p style="font-size: 0.8rem; color: #49cc90; margin: 0.5rem 0 0 135px;">
+                        <strong>Local Proxy Mode:</strong> Using relative paths. Authentication flows will redirect
+                        correctly to localhost if running via <code>make dev</code>.
+                    </p>
+                </div>
+                <div class="action-bar">
+                    <button class="primary" onclick="initClient()">Apply Configuration</button>
+                    <small style="margin-left: auto;">Targeting: <span id="current-target">...</span></small>
+                </div>
+            </div>
+        </div>
+
+        <!-- AUTH SECTION -->
+        <div class="api-section">
+            <div class="api-section-header">
+                <h2>Auth</h2>
+                <p>Same-origin authentication routes (provider redirects + logout)</p>
+            </div>
+
+            <!-- /auth/signin -->
+            <div class="endpoint-card">
+                <div><span class="method-badge method-GET">GET</span> <span class="endpoint-path">/auth/signin</span>
+                </div>
+                <p class="endpoint-desc">Returns a simple HTML page with provider options.</p>
+                <div class="action-bar">
+                    <button class="secondary" onclick="openAuthRoute('/auth/signin')">Open Sign-in Page</button>
+                </div>
+            </div>
+
+            <!-- /auth/google/login -->
+            <div class="endpoint-card">
+                <div><span class="method-badge method-GET">GET</span> <span
+                        class="endpoint-path">/auth/google/login</span></div>
+                <p class="endpoint-desc">Start Google OAuth login.</p>
+                <div class="action-bar">
+                    <button class="secondary" onclick="openAuthRoute('/auth/google/login')">Start Google Login</button>
+                </div>
+            </div>
+
+            <!-- /auth/apple/login -->
+            <div class="endpoint-card">
+                <div><span class="method-badge method-GET">GET</span> <span
+                        class="endpoint-path">/auth/apple/login</span></div>
+                <p class="endpoint-desc">Start Apple OAuth login.</p>
+                <div class="action-bar">
+                    <button class="secondary" onclick="openAuthRoute('/auth/apple/login')">Start Apple Login</button>
+                </div>
+            </div>
+
+            <!-- /auth/logout -->
+            <div class="endpoint-card">
+                <div><span class="method-badge method-POST">POST</span> <span class="endpoint-path">/auth/logout</span>
+                </div>
+                <p class="endpoint-desc">Log out (clears session + cookies).</p>
+                <div class="action-bar">
+                    <button class="danger" onclick="executeLogout()">Execute Logout</button>
+                </div>
+                <div class="console-output" id="out-logout"></div>
+                <div class="request-log-container" id="req-logout"></div>
+            </div>
+
+            <!-- /auth/identities/manage -->
+            <div class="endpoint-card">
+                <div><span class="method-badge method-GET">GET</span> <span
+                        class="endpoint-path">/auth/identities/manage</span></div>
+                <p class="endpoint-desc">Manage linked identities (HTML).</p>
+                <div class="action-bar">
+                    <button class="secondary" onclick="openAuthRoute('/auth/identities/manage')">Open Manage
+                        Page</button>
+                </div>
+            </div>
+
+            <!-- /auth/identities/unlink -->
+            <div class="endpoint-card">
+                <div><span class="method-badge method-POST">POST</span> <span
+                        class="endpoint-path">/auth/identities/unlink</span></div>
+                <p class="endpoint-desc">Unlink an upstream identity.</p>
+                <div class="params-container">
+                    <div class="param-row">
+                        <span class="param-label">Issuer</span>
+                        <input type="text" id="unlink-issuer" class="param-input"
+                            placeholder="e.g. https://accounts.google.com">
+                    </div>
+                    <div class="param-row">
+                        <span class="param-label">Subject</span>
+                        <input type="text" id="unlink-sub" class="param-input" placeholder="Provider Subject ID">
+                    </div>
+                </div>
+                <div class="action-bar">
+                    <button class="primary" onclick="executeUnlink()">Unlink Identity</button>
+                </div>
+                <div class="console-output" id="out-unlink"></div>
+                <div class="request-log-container" id="req-unlink"></div>
+            </div>
+
+            <!-- /auth/account/delete -->
+            <div class="endpoint-card">
+                <div><span class="method-badge method-POST">POST</span> <span
+                        class="endpoint-path">/auth/account/delete</span></div>
+                <p class="endpoint-desc">Delete account (Permanently).</p>
+                <div class="params-container">
+                    <div class="param-row">
+                        <span class="param-label">Confirm Text</span>
+                        <input type="text" id="delete-confirm" class="param-input"
+                            placeholder="Type 'DELETE' to confirm">
+                    </div>
+                </div>
+                <div class="action-bar">
+                    <button class="danger" onclick="executeDelete()">Delete Account</button>
+                </div>
+                <div class="console-output" id="out-delete"></div>
+                <div class="request-log-container" id="req-delete"></div>
+            </div>
+        </div>
+
+        <!-- SESSION SECTION -->
+        <div class="api-section">
+            <div class="api-section-header">
+                <h2>Session</h2>
+                <p>Session and identity endpoints</p>
+            </div>
+
+            <!-- /api/session -->
+            <div class="endpoint-card">
+                <div><span class="method-badge method-GET">GET</span> <span class="endpoint-path">/api/session</span>
+                </div>
+                <p class="endpoint-desc">Session authentication check.</p>
+                <div class="action-bar">
+                    <button class="primary" onclick="executeGetSession()">Check Session</button>
+                </div>
+                <div class="console-output" id="out-session"></div>
+                <div class="request-log-container" id="req-session"></div>
+            </div>
+
+            <!-- /api/me -->
+            <div class="endpoint-card">
+                <div><span class="method-badge method-GET">GET</span> <span class="endpoint-path">/api/me</span></div>
+                <p class="endpoint-desc">Auth identity for current session (AuthGenie userinfo).</p>
+                <div class="action-bar">
+                    <button class="primary" onclick="executeGetMe()">Get Me</button>
+                </div>
+                <div class="console-output" id="out-me"></div>
+                <div class="request-log-container" id="req-me"></div>
+            </div>
+        </div>
+
+        <!-- PAGES SECTION -->
+        <div class="api-section">
+            <div class="api-section-header">
+                <h2>Pages</h2>
+                <p>Page-model endpoints for SPA routes</p>
+            </div>
+
+            <!-- /api/pages/upcoming-trips -->
+            <div class="endpoint-card">
+                <div><span class="method-badge method-GET">GET</span> <span
+                        class="endpoint-path">/api/pages/upcoming-trips</span></div>
+                <p class="endpoint-desc">Upcoming trips page model.</p>
+                <div class="action-bar">
+                    <button class="primary" onclick="executeUpcomingTrips()">Get Page Model</button>
+                </div>
+                <div class="console-output" id="out-upcoming"></div>
+                <div class="request-log-container" id="req-upcoming"></div>
+            </div>
+        </div>
+
+        <!-- MEMBERS SECTION -->
+        <div class="api-section">
+            <div class="api-section-header">
+                <h2>Members</h2>
+                <p>Member profile endpoints</p>
+            </div>
+
+            <!-- /api/members/me -->
+            <div class="endpoint-card">
+                <div><span class="method-badge method-GET">GET</span> <span class="endpoint-path">/api/members/me</span>
+                </div>
+                <p class="endpoint-desc">Current member profile (proxy to Planner API).</p>
+                <div class="action-bar">
+                    <button class="primary" onclick="executeGetProfile()">Get Profile</button>
+                </div>
+                <div class="console-output" id="out-profile"></div>
+                <div class="request-log-container" id="req-profile"></div>
+            </div>
+        </div>
+
+        <!-- WIDGETS SECTION -->
+        <div class="api-section">
+            <div class="api-section-header">
+                <h2>Widgets</h2>
+                <p>Static-friendly widget endpoints</p>
+            </div>
+
+            <!-- /api/widgets/my-rsvp -->
+            <div class="endpoint-card">
+                <div><span class="method-badge method-GET">GET</span> <span
+                        class="endpoint-path">/api/widgets/my-rsvp</span></div>
+                <p class="endpoint-desc">Get my RSVP for a trip.</p>
+                <div class="params-container">
+                    <div class="param-row">
+                        <span class="param-label">Trip ID</span>
+                        <input type="text" id="widget-trip-id" class="param-input"
+                            value="f3d2a79f-5ee8-48b9-b61f-aed07aeb35fa">
+                    </div>
+                </div>
+                <div class="action-bar">
+                    <button class="primary" onclick="executeGetRsvp()">Get RSVP</button>
+                </div>
+                <div class="console-output" id="out-get-rsvp"></div>
+                <div class="request-log-container" id="req-get-rsvp"></div>
+            </div>
+
+            <!-- PUT /api/widgets/my-rsvp -->
+            <div class="endpoint-card">
+                <div><span class="method-badge method-PUT">PUT</span> <span
+                        class="endpoint-path">/api/widgets/my-rsvp</span></div>
+                <p class="endpoint-desc">Set/clear my RSVP for a trip.</p>
+                <div class="params-container">
+                    <div class="param-row">
+                        <span class="param-label">Trip ID</span>
+                        <input type="text" id="put-trip-id" class="param-input"
+                            value="f3d2a79f-5ee8-48b9-b61f-aed07aeb35fa">
+                    </div>
+                    <div class="param-row">
+                        <span class="param-label">Response</span>
+                        <select id="put-rsvp-status" class="param-input">
+                            <option value="YES">YES</option>
+                            <option value="NO">NO</option>
+                            <option value="UNSET">UNSET</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="action-bar">
+                    <button class="primary" onclick="executeSetRsvp()">Set RSVP</button>
+                </div>
+                <div class="console-output" id="out-set-rsvp"></div>
+                <div class="request-log-container" id="req-set-rsvp"></div>
+            </div>
+    </main>
+
+    <footer>
+        <script src="/js/footer.js?v=20260205193800"></script>
+    </footer>
+
+    <!-- Load BFF Client and Utils -->
+    <script src="/js/web_bff_client.js?v=20260205193800"></script>
+    <script src="/js/utils.js?v=20260205193800"></script>
+
+    <script>
+        // Gemini: API Explorer Scripts
+        let client;
+        let logTargetId = null;
+
+        function setLogTarget(id) {
+            logTargetId = id;
+            const el = document.getElementById(id);
+            if (el) el.innerHTML = ''; // Clear previous log
+        }
+
+        function initClient() {
+            const baseUrl = document.getElementById('api-base-url').value.trim();
+            client = new WebBFFClient(baseUrl);
+            document.getElementById('current-target').textContent = client.baseUrl;
+
+            // Wire up logging
+            client.setOnLog((details) => {
+                if (!logTargetId) return;
+                const container = document.getElementById(logTargetId);
+                if (!container) return;
+
+                const methodColor = details.request.method === 'GET' ? '#61affe' :
+                    details.request.method === 'POST' ? '#49cc90' :
+                        details.request.method === 'PUT' ? '#fca130' : '#f93e3e';
+                const statusColor = details.response.status >= 400 ? '#f93e3e' : '#49cc90';
+
+                const logHtml = `
+<div class="endpoint-card" style="border-left: 5px solid ${statusColor}; margin-top: 1rem; background: rgba(255,255,255,0.03);">
+    <div style="font-family: monospace; font-weight: bold; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <span style="color: ${methodColor}; margin-right: 0.5rem;">${details.request.method}</span>
+            <span style="color: var(--text-main);">${details.request.url}</span>
+        </div>
+        <div style="text-align: right;">
+             <span style="color: ${statusColor}">${details.response.status} ${details.response.statusText}</span>
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div style="background: rgba(0,0,0,0.2); padding: 0.8rem; border-radius: 4px;">
+            <div style="font-size: 0.75rem; text-transform: uppercase; color: #888; font-weight: bold; margin-bottom: 0.5rem; border-bottom: 1px solid #444; padding-bottom: 4px;">Request Headers</div>
+            <pre class="console-output visible" style="margin: 0; max-height: 150px; background: transparent; padding: 0;">${JSON.stringify(details.request.headers || {}, null, 2)}</pre>
+            
+            ${details.request.body ? `
+            <div style="font-size: 0.75rem; text-transform: uppercase; color: #888; font-weight: bold; margin-top: 0.8rem; margin-bottom: 0.5rem; border-bottom: 1px solid #444; padding-bottom: 4px;">Request Body</div>
+            <pre class="console-output visible" style="margin: 0; max-height: 150px; background: transparent; padding: 0;">${details.request.body}</pre>
+            ` : ''}
+        </div>
+        
+        <div style="background: rgba(0,0,0,0.2); padding: 0.8rem; border-radius: 4px;">
+            <div style="font-size: 0.75rem; text-transform: uppercase; color: #888; font-weight: bold; margin-bottom: 0.5rem; border-bottom: 1px solid #444; padding-bottom: 4px;">Response Headers</div>
+            <pre class="console-output visible" style="margin: 0; max-height: 150px; background: transparent; padding: 0;">${JSON.stringify(details.response.headers, null, 2)}</pre>
+        </div>
+    </div>
+</div>`;
+
+                container.innerHTML = logHtml;
+            });
+        }
+
+        function log(elementId, data, isError = false) {
+            const el = document.getElementById(elementId);
+            el.classList.add('visible');
+            const timestamp = new Date().toLocaleTimeString();
+            let content = '';
+            if (typeof data === 'string') {
+                content = data;
+            } else {
+                content = JSON.stringify(data, null, 2);
+            }
+
+            if (isError) {
+                el.innerHTML = `<span style="color:#ff5555">[ERROR] ${content}</span>`;
+            } else {
+                el.innerHTML = `<span style="color:#888">[${timestamp}] Result Body:</span>\n${content}`;
+            }
+        }
+
+        function openAuthRoute(path) {
+            const baseUrl = document.getElementById('api-base-url').value.trim();
+            const returnTo = document.getElementById('global-return-to').value.trim();
+
+            let url;
+            if (baseUrl) {
+                // If Base URL is provided (remote testing), construct from there
+                url = new URL(path, baseUrl);
+            } else {
+                // If Base URL is empty (local proxy), construct relative to current origin
+                url = new URL(path, window.location.origin);
+            }
+
+            if (returnTo) {
+                url.searchParams.set('returnTo', returnTo);
+            }
+
+            const fullUrl = url.toString();
+            window.location.href = fullUrl;
+        }
+
+        // --- Executors ---
+
+        async function executeLogout() {
+            setLogTarget('req-logout');
+            try {
+                await client.logout();
+                log('out-logout', 'Logged out successfully (204)');
+            } catch (e) { log('out-logout', e.message, true); }
+        }
+
+        async function executeUnlink() {
+            setLogTarget('req-unlink');
+            const issuer = document.getElementById('unlink-issuer').value.trim();
+            const sub = document.getElementById('unlink-sub').value.trim();
+            try {
+                await client.unlinkIdentity(issuer, sub);
+                log('out-unlink', 'Unlinked successfully (Redirected back usually, but if AJAX: 200/302)');
+            } catch (e) { log('out-unlink', e.message, true); }
+        }
+
+        async function executeDelete() {
+            setLogTarget('req-delete');
+            const confirm = document.getElementById('delete-confirm').value.trim();
+            const returnTo = document.getElementById('global-return-to').value.trim();
+            try {
+                // Warning: This will actually delete the account
+                await client.deleteAccount(confirm, returnTo);
+                log('out-delete', 'Account deleted.');
+            } catch (e) { log('out-delete', e.message, true); }
+        }
+
+        async function executeGetSession() {
+            setLogTarget('req-session');
+            try {
+                const res = await client.getSession();
+                log('out-session', res);
+            } catch (e) { log('out-session', e.message, true); }
+        }
+
+        async function executeGetMe() {
+            setLogTarget('req-me');
+            try {
+                const res = await client.getMe();
+                log('out-me', res);
+            } catch (e) { log('out-me', e.message, true); }
+        }
+
+        async function executeUpcomingTrips() {
+            setLogTarget('req-upcoming');
+            try {
+                const res = await client.getUpcomingTrips();
+                log('out-upcoming', res);
+            } catch (e) { log('out-upcoming', e.message, true); }
+        }
+
+        async function executeGetProfile() {
+            setLogTarget('req-profile');
+            try {
+                const res = await client.getPlannerProfile();
+                log('out-profile', res);
+            } catch (e) { log('out-profile', e.message, true); }
+        }
+
+        async function executeGetRsvp() {
+            setLogTarget('req-get-rsvp');
+            const tripId = document.getElementById('widget-trip-id').value.trim();
+            try {
+                const res = await client.getMyRsvp(tripId);
+                log('out-get-rsvp', res);
+            } catch (e) { log('out-get-rsvp', e.message, true); }
+        }
+
+        async function executeSetRsvp() {
+            setLogTarget('req-set-rsvp');
+            const tripId = document.getElementById('put-trip-id').value.trim();
+            const status = document.getElementById('put-rsvp-status').value;
+            try {
+                const res = await client.setMyRsvp(tripId, status);
+                log('out-set-rsvp', res);
+            } catch (e) { log('out-set-rsvp', e.message, true); }
+        }
+
+        window.addEventListener('load', initClient);
+    </script>
+</body>
+
+</html>

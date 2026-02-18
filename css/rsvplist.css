@@ -1,0 +1,142 @@
+/* Temporary inline styles for RSVP table specific needs until moved to content-trip.css */
+/* Moved from rsvplist.html */
+
+.rsvp-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.trip-header {
+    margin-bottom: 2rem;
+}
+
+.rsvp-actions {
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.rsvp-table-container {
+    overflow-x: auto;
+    background: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+table.rsvp-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+    color: var(--text-main);
+}
+
+table.rsvp-table th,
+table.rsvp-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-main);
+}
+
+table.rsvp-table th {
+    background-color: rgba(255, 255, 255, 0.05);
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+    color: var(--accent);
+}
+
+table.rsvp-table th:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+table.rsvp-table th::after {
+    content: '↕';
+    font-size: 0.8em;
+    margin-left: 0.5em;
+    color: var(--text-muted);
+}
+
+table.rsvp-table th.asc::after {
+    content: '↑';
+    color: var(--accent);
+}
+
+table.rsvp-table th.desc::after {
+    content: '↓';
+    color: var(--accent);
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.85em;
+    font-weight: 500;
+}
+
+/* Dark Mode Badges */
+.status-going {
+    background-color: rgba(43, 84, 44, 0.4);
+    color: #e2fbd0;
+    border: 1px solid rgba(43, 84, 44, 0.6);
+}
+
+.status-maybe {
+    background-color: rgba(133, 100, 4, 0.4);
+    color: #fff3cd;
+    border: 1px solid rgba(133, 100, 4, 0.6);
+}
+
+.status-not-going {
+    background-color: rgba(114, 28, 36, 0.4);
+    color: #f8d7da;
+    border: 1px solid rgba(114, 28, 36, 0.6);
+}
+
+.not-logged-in-message {
+    text-align: center;
+    padding: 3rem;
+    background: var(--card-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.loading-state,
+.error-state,
+.empty-state {
+    padding: 3rem;
+    text-align: center;
+    color: var(--text-muted);
+}
+
+/* Auth Button Style Matching Nav */
+.btn-dark-auth {
+    background-color: transparent;
+    /* Match nav transparent look or use dark card bg */
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: var(--font-main);
+    /* Ensure font match */
+}
+
+.btn-dark-auth:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.btn-dark-auth svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+}

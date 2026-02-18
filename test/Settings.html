@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | Overland EastBay</title>
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="stylesheet" href="../css/style.css?v=20260205193800">
+    <!-- Cloudflare Web Analytics -->
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js'
+        data-cf-beacon='{"token": "933e079b3a424ffc98c6ce8278414d20"}'></script><!-- End Cloudflare Web Analytics -->
+</head>
+
+<body class="index-layout">
+    <header>
+        <script src="../js/test_nav.js?v=20260205193800"></script>
+    </header>
+
+    <main>
+        <div class="profile-container" id="profile-content">
+            <!-- Content injected via JS -->
+            <div class="profile-card">
+                <div class="profile-header">
+                    <div class="profile-avatar skeleton"></div>
+                    <div style="flex: 1">
+                        <div class="skeleton" style="width: 50%; height: 2rem; margin-bottom: 1rem;"></div>
+                        <div class="skeleton" style="width: 30%;"></div>
+                    </div>
+                </div>
+                <div class="skeleton" style="width: 100%; height: 100px;"></div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <script src="../js/footer.js"></script>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const container = document.getElementById('profile-content');
+
+            // Re-use logic from test_nav.js for auth check if possible, or just check localStorage directly
+            const isLoggedIn = localStorage.getItem('ebo_demo_logged_in') === 'true';
+
+            if (!isLoggedIn) {
+                container.innerHTML = `
+                    <div class="not-logged-in-message">
+                        <h1>Please Sign In</h1>
+                        <p>You need to be logged in to view your profile settings.</p>
+                        <p>Click the Login button in the top right.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            try {
+                // Load Config similar to api.html
+                let apiHost = '';
+                let debugSubject = 'dev|armin'; // Default
+
+                try {
+                    const configResp = await fetch('/config.json');
+                    const config = await configResp.json();
+                    apiHost = config.apiHost;
+                    if (config.headers && config.headers.debugSubject) {
+                        debugSubject = config.headers.debugSubject;
+                    }
+                } catch (e) {
+                    console.error('Could not load config.json', e);
+                    throw new Error('Configuration load failed');
+                }
+
+                // Simulate delay for skeleton effect
+                await new Promise(r => setTimeout(r, 600));
+
+                const response = await fetch(`${apiHost}/members/me`, {
+                    headers: {
+                        'X-Debug-Subject': debugSubject
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API Error: ${response.status} ${response.statusText}`);
+                }
+
+                const data = await response.json();
+
+                // Agent change: ensure we handle the response structure from the API
+                // api docs say: { "member": { ... } }
+                if (!data || !data.member) {
+                    throw new Error('Invalid API response format');
+                }
+
+                const member = data.member;
+                renderProfile(member);
+
+            } catch (error) {
+                console.error('Profile fetch error:', error);
+
+                container.innerHTML = `
+                    <div class="profile-card" style="text-align: center; color: #ff6b6b;">
+                        <h1>Error Loading Profile</h1>
+                        <p>${error.message}</p>
+                        <p class="muted-text" style="font-size: 0.9em; margin-top: 1rem;">
+                            Please ensure the API server is running and accessible.
+                        </p>
+                        <button onclick="location.reload()" class="btn" style="margin-top: 1.5rem">Retry</button>
+                    </div>
+                `;
+            }
+        });
+
+        function renderProfile(member) {
+            const container = document.getElementById('profile-content');
+            const initials = member.displayName ? member.displayName.substring(0, 2).toUpperCase() : '??';
+
+            container.innerHTML = `
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <div class="profile-avatar">${initials}</div>
+                        <div class="profile-info">
+                            <h1>${member.displayName || 'Unknown Member'}</h1>
+                            <div class="email">${member.email || 'No email provided'}</div>
+                            <div class="member-id">ID: ${member.memberId}</div>
+                        </div>
+                    </div>
+
+                    <div class="detail-group">
+                        <div class="detail-label">Vehicle Profile</div>
+                        <div class="vehicle-card">
+                            <div class="detail-value">
+                                ${member.vehicleProfile?.make || 'Unknown Make'} 
+                                ${member.vehicleProfile?.model || 'Unknown Model'}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-group profile-preferences">
+                        <div class="detail-label">Preferences</div>
+                        <p class="muted-text">Notification settings coming soon...</p>
+                    </div>
+                </div>
+
+                <!-- Developer Tools Section -->
+                <div class="profile-card" style="margin-top: 1.5rem;">
+                     <div class="detail-group">
+                         <div class="detail-label">Developer</div>
+                         <a href="api.html" class="btn btn-secondary btn-sm" style="margin-left:0;">
+                            Open API Test Harness
+                         </a>
+                     </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+
+</html>

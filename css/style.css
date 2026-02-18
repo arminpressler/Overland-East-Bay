@@ -1,0 +1,1074 @@
+/* Gemini: changed 2025-12-22 - Moved @import to top of file to fix CSS validation error */
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Inter:wght@400;500;700;800&display=swap');
+
+/* --- Design System Variables --- */
+:root {
+    /* Colors */
+    --bg-color: #1a1a1a;
+    --card-bg: #2d2d2d;
+    --bg-color-secondary: #2d2d2d;
+    --text-main: #e0e0e0;
+    --text-muted: #a0a0a0;
+    --accent: #d4a373;
+    /* Earthy Gold */
+    --accent-hover: #e9c46a;
+    --border-color: #404040;
+    --nav-bg: rgba(26, 26, 26, 0.95);
+
+    /* Typography */
+    --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-heading: 'Inter', system-ui, -apple-system, sans-serif;
+    /* Could be Display font if desired */
+
+    /* Spacing */
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 4rem;
+    --container-width: 1200px;
+
+    /* Effects */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.3);
+    --box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+
+    /* Moved from index.css */
+    --bg-light: #fdfaf6;
+    --text-dark: #1a1a1a;
+    --transition-speed: 0.6s;
+
+    --button-pg: rgba(212, 163, 115, 0.1);
+    --google-blue: #4285F4;
+
+    /* Gemini: added 2026-01-16 - Depth and Shadow variables */
+    /* Tuned for Dark Mode base */
+    /* Gemini: added 2026-01-16 - Depth and Shadow variables */
+    /* Gemini: added 2026-01-16 - Depth and Shadow variables */
+    /* Tuned for Dark Mode base - High Contrast */
+    /* Top rim highlight - brighter for visibility */
+    /* Top rim highlight - brighter for visibility */
+    --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    /* Deep drop shadow + Outline ring for emphasis */
+    --shadow-drop: 0 4px 8px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.4);
+    /* Hover state */
+    --shadow-drop-hover: 0 10px 25px rgba(0, 0, 0, 0.4), 0 4px 10px rgba(0, 0, 0, 0.3);
+    --transform-lift: translateY(-2px);
+}
+
+/* --- Reset & Base --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    font-family: var(--font-main);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+a {
+    color: var(--accent);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: var(--accent-hover);
+}
+
+h1,
+h2,
+h3,
+h4 {
+    color: #fff;
+    margin-bottom: var(--spacing-md);
+    line-height: 1.2;
+}
+
+p {
+    margin-bottom: var(--spacing-md);
+}
+
+ul,
+ol {
+    margin-bottom: var(--spacing-md);
+    padding-left: var(--spacing-lg);
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid var(--border-color);
+    margin: var(--spacing-lg) 0;
+}
+
+/* --- Layout Components --- */
+
+/* Navigation */
+header {
+    background-color: var(--nav-bg);
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+}
+
+nav {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: var(--spacing-md) var(--spacing-lg);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    /* agent change 2026-01-04 - align bottom of texts */
+}
+
+/* Gemini: changed 2025-12-22 - Enhanced logo layout with better spacing and visual styling */
+.logo {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: baseline;
+    /* agent change 2026-01-04 - align logo text with menu text */
+    gap: 0.75rem;
+    padding: 0.25rem 0;
+}
+
+.logo img {
+    display: block;
+    border-radius: 6px;
+    box-shadow: var(--box-shadow);
+    transition: transform 0.2s ease;
+}
+
+.logo:hover img {
+    transform: scale(1.05);
+}
+
+.nav-links {
+    display: flex;
+    gap: var(--spacing-lg);
+    color: var(--accent);
+    align-items: baseline;
+    /* agent change 2026-01-04 - align menu items and login button text */
+}
+
+.nav-links a {
+    color: var(--text-main);
+    font-weight: 500;
+}
+
+.nav-links a:hover {
+    color: var(--accent-hover);
+}
+
+/* Main Container */
+main {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: var(--spacing-lg);
+    min-height: 80vh;
+}
+
+
+
+/* Page Header (Content Pages) */
+.page-header {
+    background-color: var(--card-bg);
+    padding: var(--spacing-xl) 0;
+    margin-top: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    border-bottom: 1px solid var(--border-color);
+    text-align: center;
+}
+
+.header-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-lg);
+}
+
+.header-content h1 {
+    font-size: 2.5rem;
+    color: var(--accent);
+    margin-bottom: var(--spacing-sm);
+}
+
+.header-content p {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+}
+
+
+/* Article Layout (Content Pages) */
+article {
+    background-color: var(--card-bg);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    max-width: 900px;
+    margin: 0 auto;
+    /* Center single column */
+}
+
+/* Footer */
+footer {
+    background-color: #111;
+    border-top: 1px solid var(--border-color);
+    padding: var(--spacing-xl) var(--spacing-lg);
+    text-align: center;
+    color: var(--text-muted);
+}
+
+.footer-content {
+    max-width: var(--container-width);
+    margin: 0 auto;
+}
+
+.footer-links {
+    margin-top: var(--spacing-md);
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-md);
+    align-items: center;
+}
+
+.footer-links a {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.footer-links a:hover {
+    color: var(--accent);
+}
+
+.footer-separator {
+    color: var(--border-color);
+    font-size: 0.8rem;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background-color: var(--accent);
+    color: #3E2723;
+    /* Dark Warm Brown - Softer than black */
+    font-weight: 700;
+    border-radius: var(--radius-sm);
+    transition: all 0.2s ease;
+    /* border: 1px solid transparent; removed to let new border take effect */
+    /* Changed to transparent to let shadow shine, or keep accent */
+
+    /* Gemini: added 2026-01-16 - Depth styling */
+    box-shadow: var(--shadow-inset), var(--shadow-drop);
+    /* Ensure text shadow helps text pop on colored buttons */
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.2);
+    /* Soft highlight instead of dark shadow */
+
+    /* Gemini: added 2026-01-16 - Maximum Gloss with Subtle Slant */
+    background-image: linear-gradient(170deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.1) 50%, rgba(0, 0, 0, 0.2) 100%);
+    border: 0px solid rgba(255, 255, 255, 0.1);
+    /* Very soft edge */
+}
+
+.btn:hover {
+    background-color: var(--accent-hover);
+    /* border-color: var(--accent-hover); */
+    color: #2b1b18;
+    /* Darker brown on hover */
+
+    /* Gemini: added 2026-01-16 - Lift effect */
+    box-shadow: var(--shadow-inset), var(--shadow-drop-hover);
+    transform: var(--transform-lift);
+}
+
+.btn-google {
+    background-color: var(--google-blue);
+    color: white;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-color: transparent;
+    /* Remove border to let shadow shine */
+}
+
+.btn-google:hover {
+    background-color: #357abd;
+    border-color: #357abd;
+    color: white;
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: #c09466;
+    /* Middle ground: darker than accent, lighter than previous */
+    margin-left: var(--spacing-sm);
+    /* Gemini: Balanced light gradient - slightly softer bottom */
+    background-image: linear-gradient(170deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.1) 50%, rgba(0, 0, 0, 0.08) 100%);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Gemini: added 2026-01-16 - Standardized Disabled State */
+.btn-disabled {
+    background-color: #6c757d;
+    /* Standard gray */
+    color: rgba(255, 255, 255, 0.7);
+    cursor: default;
+    pointer-events: none;
+    box-shadow: none;
+    /* Flatten disabled buttons */
+    background-image: none;
+    /* Remove gloss */
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.btn-secondary:hover {
+    background-color: rgba(212, 163, 115, 0.1);
+    color: var(--accent-hover);
+    border-color: var(--accent-hover);
+}
+
+/* Location Section Wrapper */
+.location-box {
+    background: var(--surface-card);
+    padding: 1.5rem;
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--spacing-lg);
+
+    /* Gemini: added 2026-01-16 - Depth styling */
+    box-shadow: var(--shadow-inset), var(--shadow-drop);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    /* Increased visibility */
+    /* Increased visibility */
+    /* Subtle highlight border */
+}
+
+.location-box iframe {
+    width: 100%;
+    margin-top: var(--spacing-md);
+    border-radius: var(--radius-md);
+    border: none;
+}
+
+/* Text Utilities */
+.accent-text {
+    color: var(--accent);
+}
+
+/* Callout Sections - Base Styles */
+.callout-section,
+.callout-info,
+.callout-warning,
+.callout-danger,
+.callout-success {
+    padding: 1.5rem 2rem;
+    margin-bottom: 2.5rem;
+    border-radius: var(--radius-md);
+    color: var(--text-main);
+    border-left: 6px solid var(--accent);
+    background-color: rgba(212, 163, 115, 0.1);
+
+    /* Gemini: added 2026-01-16 - Depth styling - removed inset for callouts to keep text separate */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+
+    /* Gemini: added 2026-01-16 - Glass Effect */
+    background-image: linear-gradient(170deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(0, 0, 0, 0.05) 100%);
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    /* Top Highlight */
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+.callout-info {
+    background-color: rgba(13, 110, 253, 0.1);
+    border-left-color: #0d6efd;
+}
+
+.callout-warning {
+    background-color: rgba(255, 193, 7, 0.1);
+    border-left-color: #ffc107;
+}
+
+.callout-danger {
+    background-color: rgba(220, 53, 69, 0.15);
+    border-left-color: #dc3545;
+}
+
+.callout-success {
+    background-color: rgba(25, 135, 84, 0.15);
+    border-left-color: #198754;
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2rem;
+    }
+
+    nav {
+        flex-direction: column;
+        gap: var(--spacing-md);
+    }
+
+    .nav-links {
+        gap: var(--spacing-md);
+        color: var(--accent);
+    }
+
+    article {
+        padding: var(--spacing-lg);
+    }
+
+    article {
+        padding: var(--spacing-lg);
+    }
+}
+
+
+/* Utilities */
+.w-full {
+    width: 100% !important;
+}
+
+.mb-0 {
+    margin-bottom: 0 !important;
+}
+
+.mb-lg {
+    margin-bottom: var(--spacing-lg) !important;
+}
+
+.mono-text {
+    font-family: monospace;
+}
+
+/* Helpers (Moved from index.css) */
+.mt-0 {
+    margin-top: 0 !important;
+}
+
+.mt-2 {
+    margin-top: 2rem;
+}
+
+.mt-5 {
+    margin-top: 5rem;
+}
+
+.mt-1 {
+    margin-top: 1rem;
+}
+
+.no-bullet {
+    list-style: none !important;
+    padding-left: 0 !important;
+}
+
+.border-accent {
+    border: 4px solid var(--accent);
+}
+
+.text-dark {
+    color: #1a1a1a !important;
+}
+
+.mw-600 {
+    max-width: 600px;
+    margin: 0 auto var(--spacing-lg);
+}
+
+.text-center {
+    text-align: center;
+}
+
+.callout-section h3 {
+    margin-top: 0;
+}
+
+.callout-section .last-updated {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    opacity: 0.8;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    opacity: 0.8;
+    font-style: italic;
+}
+
+/* Image Floats & Text Wrapping */
+.img-float-left {
+    float: left;
+    margin-right: 2rem;
+    margin-bottom: 1rem;
+    max-width: 50%;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+}
+
+.img-float-right {
+    float: right;
+    margin-left: 2rem;
+    margin-bottom: 1rem;
+    max-width: 50%;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+}
+
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+@media (max-width: 768px) {
+
+    .img-float-left,
+    .img-float-right {
+        float: none;
+        max-width: 100%;
+        margin: 1rem 0;
+        width: 100%;
+    }
+}
+
+
+/* agent change 2026-01-04 - Added Auth Widget and Mobile Menu styles */
+/* --- Auth & RSVP Widgets --- */
+.ebo-auth-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-sm);
+    border: none;
+    /* agent change 2026-01-04 - removed border */
+    background: transparent;
+    color: var(--text-main);
+    font-family: var(--font-main);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    margin-left: var(--spacing-lg);
+    /* agent change 2026-01-04 - added spacing from menu */
+}
+
+.ebo-auth-button:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(212, 163, 115, 0.05);
+}
+
+/* Gemini: changed 2026-01-05 - Increased icon size for door icons */
+.ebo-auth-button svg {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+}
+
+/* Auth Modal Premium Styling */
+dialog#ebo-auth-modal {
+    border: none;
+    border-radius: 16px;
+    padding: 0;
+    max-width: 400px;
+    width: 100%;
+    background: rgba(30, 30, 30, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #eee;
+    /* agent change 2026-01-04 - force centering */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+}
+
+.modal-content {
+    padding: 2rem;
+}
+
+.modal-header {
+    margin-bottom: 1.5rem;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.auth-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 0.8rem;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: transform 0.2s, background 0.2s;
+    border: 1px solid rgba(127, 127, 127, 0.2);
+}
+
+.auth-btn:hover {
+    transform: translateY(-2px);
+}
+
+.auth-btn-google {
+    background: #fff;
+    color: #000;
+}
+
+.auth-btn-apple {
+    background: #000;
+    color: #fff;
+}
+
+.modal-footer {
+    margin-top: 1.5rem;
+    font-size: 0.85rem;
+    text-align: center;
+    opacity: 0.7;
+}
+
+dialog::backdrop {
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+}
+
+.btn-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: inherit;
+    opacity: 0.5;
+}
+
+.btn-close:hover {
+    opacity: 1;
+}
+
+/* Mobile Menu Toggle */
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+.menu-toggle span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background-color: var(--text-main);
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    nav {
+        flex-wrap: nowrap !important;
+        /* agent change 2026-01-04 - no wrapping in mobile header */
+        justify-content: space-between !important;
+        flex-direction: row !important;
+        align-items: center !important;
+    }
+
+    .menu-toggle {
+        display: flex;
+    }
+
+    .nav-links {
+        display: none;
+        /* Hidden by default on mobile, toggled via JS */
+        position: absolute;
+        top: 100%;
+        left: auto;
+        /* agent change 2026-01-04 - align to right */
+        right: 0;
+        width: 250px;
+        background-color: var(--nav-bg);
+        flex-direction: column;
+        padding: 1.5rem;
+        gap: 1.25rem;
+        border-bottom: 1px solid var(--border-color);
+        border-left: 1px solid var(--border-color);
+        box-shadow: var(--shadow-md);
+        text-align: right;
+        /* agent change 2026-01-04 - right align links */
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .nav-links a {
+        padding: 0.5rem 0;
+    }
+
+    .ebo-auth-button {
+        margin-left: 0;
+        justify-content: flex-end;
+    }
+}
+
+/* --- Navigation Auth & Settings Integration --- */
+.nav-auth-container {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    /* Space between AuthBtn and Divider */
+}
+
+/* Settings Container */
+#nav-settings-container {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.nav-icon-link {
+    color: var(--text-main, #e0e0e0);
+    display: flex;
+    align-items: center;
+    transition: color 0.2s;
+    padding: 4px;
+    /* hit area */
+}
+
+.nav-icon-link:hover {
+    color: var(--accent, #d4a373);
+}
+
+/* Explicitly size the SVG to be smaller */
+.nav-icon-link svg {
+    width: 18px;
+    height: 18px;
+    stroke-width: 2px;
+}
+
+.auth-separator {
+    color: var(--text-muted, #a0a0a0);
+    opacity: 0.5;
+    font-size: 1.2rem;
+    font-weight: 300;
+    user-select: none;
+}
+
+/* --- Profile Module Styles --- */
+.profile-container {
+    max-width: 800px;
+    margin: 4rem auto;
+    padding: 2rem;
+}
+
+.profile-card {
+    background: var(--surface-card, #2d2d2d);
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    color: var(--text-main, #e0e0e0);
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border-color, #444);
+}
+
+.profile-avatar {
+    width: 80px;
+    height: 80px;
+    background: var(--accent, #ff6b00);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: bold;
+    color: white;
+}
+
+.profile-info h1 {
+    margin: 0;
+    font-size: 2rem;
+}
+
+.profile-info .email {
+    color: var(--text-muted, #a0a0a0);
+    font-size: 1rem;
+}
+
+.profile-info .member-id {
+    margin-top: 0.5rem;
+    font-size: 0.8em;
+    opacity: 0.6;
+}
+
+.detail-group {
+    margin-bottom: 1.5rem;
+}
+
+.detail-label {
+    font-size: 0.9rem;
+    color: var(--text-muted, #a0a0a0);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+}
+
+.detail-value {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.vehicle-card {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1.5rem;
+    border-radius: 6px;
+    margin-top: 1rem;
+}
+
+.profile-preferences {
+    margin-top: 2rem;
+    border-top: 1px solid #444;
+    padding-top: 2rem;
+}
+
+.muted-text {
+    opacity: 0.6;
+    margin-bottom: 2rem;
+}
+
+.not-logged-in-message {
+    text-align: center;
+    padding: 4rem;
+}
+
+/* Loading Skeleton */
+.skeleton {
+    background: linear-gradient(90deg, #333 25%, #444 50%, #333 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+    border-radius: 4px;
+    height: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* --- YouTube Embed Styles (Added 2026-01-11) --- */
+.youtube-embed {
+    position: relative;
+    max-width: 100%;
+    margin: 2rem 0;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+}
+
+/* --- Calendar Widget Styles (Added 2026-01-11) --- */
+.calendar-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 1rem;
+}
+
+/* Base styles for both buttons to ensure uniformity */
+.btn-google,
+.btn-ics {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    /* Space between icon and text block */
+    padding: 0.5rem 1.2rem;
+    height: auto;
+    min-height: 54px;
+    border-radius: var(--radius-md);
+    text-align: left;
+    text-decoration: none;
+    line-height: 1.2;
+    /* transition: handled by .btn */
+}
+
+.btn-google:hover,
+.btn-ics:hover {
+    /* transform handled by .btn:hover */
+    text-decoration: none;
+}
+
+.btn-google>span,
+.btn-ics>span {
+    display: flex;
+    flex-direction: column;
+}
+
+.btn-label-small {
+    font-size: 0.75rem;
+    font-weight: 500;
+    opacity: 0.9;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn-label-large {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+/* Specific colors */
+.btn-ics {
+    background-color: #2da44e;
+    /* GitHub Green */
+    color: white;
+    border: 1px solid transparent;
+    /* Changed to transparent */
+    cursor: pointer;
+}
+
+.btn-ics:hover {
+    background-color: #2c974b;
+    /* border-color: #2c974b; */
+    color: white;
+}
+
+.yt-thumb-container {
+    display: block;
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    background-color: #000;
+}
+
+.yt-thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.yt-thumb-container:hover .yt-thumb {
+    opacity: 1;
+}
+
+.yt-play-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 68px;
+    height: 48px;
+    background-color: rgba(33, 33, 33, 0.8);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+.yt-thumb-container:hover .yt-play-overlay {
+    background-color: #f00;
+}
+
+.yt-play-icon {
+    color: #fff;
+    font-size: 24px;
+}
+
+.yt-url-caption {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: 0.5rem;
+}
+
+/* Image Utilities */
+.float-img-right {
+    width: 40%;
+    float: right;
+    margin: 0 0 1rem 1rem;
+    border-radius: var(--radius-md);
+}
+
+@media (max-width: 768px) {
+    .float-img-right {
+        width: 100%;
+        float: none;
+        margin: 1rem 0;
+    }
+}
+
+.rounded-md {
+    border-radius: var(--radius-md);
+}
+
+.font-cursive {
+    font-family: 'Caveat', cursive;
+    font-size: 1.5rem;
+    color: var(--accent);
+}
+
+/* agent change 2026-01-14 - Styling for 'What to do' statements */
+.what-to-do {
+    background-color: rgba(212, 163, 115, 0.1);
+    border-left: 4px solid var(--accent);
+    padding: 1rem;
+    margin-top: 1rem;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+/* agent change 2026-01-14 - Make 'What to do' stand out more on mobile */
+@media (max-width: 768px) {
+    .what-to-do {
+        background-color: rgba(212, 163, 115, 0.15);
+        border-left-width: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        padding: 1.25rem;
+    }
+}
