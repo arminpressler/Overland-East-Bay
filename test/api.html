@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- pagetype: content -->
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="API Test Harness for Overland East Bay. Interactive tool to test API endpoints for Members, Trips, Organizers, and RSVPs.">
+    <title>API Test Harness | Overland East Bay</title>
+    <!-- 
+        API Specification Reference:
+        The full API specification is available in: documentation/site-content/RSVP api.openapi.yaml
+    -->
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="stylesheet" href="/css/hero.css?v=20260205193800">
+    <link rel="stylesheet" href="/css/style.css?v=20260205193800">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Define CSS variables for compatibility with site design system */
+        :root {
+            --surface-card: var(--card-bg, #2d2d2d);
+            --text-primary: var(--text-main, #e0e0e0);
+            --text-secondary: var(--text-muted, #a0a0a0);
+            --radius-lg: var(--radius-md, 8px);
+        }
+
+        /* Scoped styles for API Harness - using site CSS variables */
+        .header-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: var(--surface-card);
+            padding: 20px;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .config-status {
+            font-size: 0.9em;
+            color: var(--text-secondary);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .section {
+            background: var(--surface-card);
+            padding: 20px;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .endpoint {
+            border: 1px solid var(--border-color, #ddd);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: var(--radius-md);
+            background: var(--surface-card);
+        }
+
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+
+        .method {
+            padding: 4px 8px;
+            border-radius: var(--radius-sm, 4px);
+            color: white;
+            font-size: 0.8em;
+            font-weight: bold;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .method.GET {
+            background-color: #007bff;
+        }
+
+        .method.POST {
+            background-color: #28a745;
+        }
+
+        .method.PUT {
+            background-color: #ffc107;
+            color: #333;
+        }
+
+        .method.PATCH {
+            background-color: #17a2b8;
+        }
+
+        .method.DELETE {
+            background-color: #dc3545;
+        }
+
+        .input-group {
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            font-size: 0.9em;
+            color: var(--text-primary);
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border-color, #ddd);
+            border-radius: var(--radius-sm, 4px);
+            box-sizing: border-box;
+            font-family: monospace;
+            font-size: 0.9em;
+            background: var(--surface-card);
+            color: var(--text-primary);
+        }
+
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        /* Custom button style overrides for API context */
+        .endpoint button {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: var(--radius-sm, 4px);
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+
+        .endpoint button:hover {
+            opacity: 0.9;
+        }
+
+        .endpoint button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        #result-container {
+            position: sticky;
+            top: 20px;
+            height: calc(100vh - 40px);
+            overflow: auto;
+        }
+
+        #result {
+            padding: 15px;
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            border-radius: var(--radius-lg);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+        }
+
+        .response-status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: var(--radius-sm, 4px);
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .status-success {
+            background-color: rgba(40, 167, 69, 0.2);
+            color: #28a745;
+        }
+
+        .status-error {
+            background-color: rgba(220, 53, 69, 0.2);
+            color: #dc3545;
+        }
+
+        .helper-text {
+            font-size: 0.8em;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+    </style>
+    <!-- Cloudflare Web Analytics -->
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js'
+        data-cf-beacon='{"token": "933e079b3a424ffc98c6ce8278414d20"}'></script><!-- End Cloudflare Web Analytics -->
+</head>
+
+<body>
+    <header>
+        <script src="/js/test_nav.js?v=20260205193800"></script>
+    </header>
+
+    <div class="hero" style="background-image: url('/archive/images/deathvalley_range.jpg');">
+        <div class="hero-content">
+            <h1 class="hero-title">API Test Harness</h1>
+            <p class="hero-subtitle">
+                Interactive tool to test API endpoints
+            </p>
+        </div>
+    </div>
+
+    <main class="content-container">
+        <div class="header-controls">
+            <div>
+                <h2>Configuration</h2>
+                <div id="config-status" class="config-status">Loading configuration...</div>
+                <div style="margin-top: 10px;">
+                    <a href="index.html" style="color: var(--text-primary); text-decoration: underline;">&larr; Back to
+                        Test Index</a>
+                </div>
+            </div>
+            <div style="text-align: right;">
+                <label for="debugSubject">Debug Subject (User ID)</label>
+                <input type="text" id="debugSubject" value="dev|armin" style="width: 200px;">
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="requests-column">
+
+                <!-- MEMBERS SECTION -->
+                <div class="section">
+                    <h2>Members</h2>
+
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="method GET">GET</span> /members
+                        </div>
+                        <div class="input-group">
+                            <label>Include Inactive?</label>
+                            <input type="checkbox" id="members-include-inactive">
+                        </div>
+                        <button
+                            onclick="apiCall('GET', '/members' + (document.getElementById('members-include-inactive').checked ? '?includeInactive=true' : ''))">List
+                            Members</button>
+                    </div>
+
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="method POST">POST</span> /members
+                        </div>
+                        <div class="input-group">
+                            <label>Body</label>
+                            <textarea id="create-member-body">
+{
+  "displayName": "New Member",
+  "email": "new.member@example.com"
+}
+                            </textarea>
+                        </div>
+                        <button onclick="apiCall('POST', '/members', 'create-member-body')">Create My Profile</button>
+                    </div>
+
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="method GET">GET</span> /members/me
+                        </div>
+                        <button onclick="apiCall('GET', '/members/me')">Get My Profile</button>
+                    </div>
+
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="method PATCH">PATCH</span> /members/me
+                        </div>
+                        <div class="input-group">
+                            <label>Body</label>
+                            <textarea id="update-member-body">
+{
+  "displayName": "Updated Name",
+  "vehicleProfile": {
+    "make": "Toyota",
+    "model": "Tacoma"
+  }
+}
+                            </textarea>
+                        </div>
+                        <button onclick="apiCall('PATCH', '/members/me', 'update-member-body')">Update My
+                            Profile</button>
+                    </div>
+
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="method GET">GET</span> /members/search
+                        </div>
+                        <div class="input-group">
+                            <label>Query (q)</label>
+                            <input type="text" id="member-search-q" placeholder="name...">
+                        </div>
+                        <button
+                            onclick="apiCall('GET', '/members/search?q=' + encodeURIComponent(document.getElementById('member-search-q').value))">Search
+                            Members</button>
+                    </div>
+                </div>
+
+                <!-- TRIPS SECTION -->
+                <div class="section">
+                    <h2>Trips</h2>
+
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="method GET">GET</span> /trips
+                        </div>
+                        <button onclick="apiCall('GET', '/trips')">List Visible Trips</button>
+                    </div>
+
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="method GET">GET</span> /trips/drafts
+                        </div>
+                        <button onclick="apiCall('GET', '/trips/drafts')">List Draft Trips</button>
+                    </div>
+
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="method POST">POST</span> /trips
+                        </div>
+                        <div class="input-group">
+                            <label>Body</label>
+                            <textarea id="create-trip-body">
+{
+  "name": "New Adventure"
+}
+                            </textarea>
+                        </div>
+                        <div class="helper-text">Note: Only 'name' is settable on creation. Use PATCH to set other
+                            fields.</div>
+                        <button onclick="apiCall('POST', '/trips', 'create-trip-body')">Create Trip Draft</button>
+                    </div>
+
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="method GET">GET</span> /trips/{tripId}
+                        </div>
+                        <div class="input-group">
+                            <label>Trip ID</label>
+                            <input type="text" id="get-trip-id" placeholder="trip-uuid">
+                        </div>
+                        <button onclick="apiCall('GET', '/trips/' + document.getElementById('get-trip-id').value)">Get
+                            Trip
+                            Details</button>
+                    </div>
+
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="method PATCH">PATCH</span> /trips/{tripId}
+                        </div>
+                        <div class="input-group">
+                            <label>Trip ID</label>
+                            <input type="text" id="patch-trip-id" placeholder="trip-uuid">
+                        </div>
+                        <div class="input-group">
+                            <label>Body</label>
+                            <textarea id="patch-trip-body">
+{
+  "name": "Updated Trip Title",
+  "capacityRigs": 15,
+  "description": "Updated description via PATCH",
+  "startDate": "2025-06-01",
+  "endDate": "2025-06-03",
+  "difficultyText": "-",
+  "meetingLocation": {
+    "label": "nowhere"
+  },
+  "commsRequirementsText": "-",
+  "recommendedRequirementsText": "-"
+}
+                            </textarea>
+                        </div>
+                        <button
+                            onclick="apiCall('PATCH', '/trips/' + document.getElementById('patch-trip-id').value, 'patch-trip-body')">Update
+                            Trip</button>
+                    </div>
+
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="method PUT">PUT</span> /trips/{tripId}/draft-visibility
+                        </div>
+                        <div class="input-group">
+                            <label>Trip ID</label>
+                            <input type="text" id="vis-trip-id" placeholder="trip-uuid">
+                        </div>
+                        <div class="input-group">
+                            <label>Body</label>
+                            <textarea id="vis-trip-body">
+{
+  "draftVisibility": "PUBLIC"
+}
+                            </textarea>
+                        </div>
+                        <button
+                            onclick="apiCall('PUT', '/trips/' + document.getElementById('vis-trip-id').value + '/draft-visibility', 'vis-trip-body')">Set
+                            Draft Visibility</button>
+                    </div>
+
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="method POST">POST</span> /trips/{tripId}/publish
+                        </div>
+                        <div class="input-group">
+                            <label>Trip ID</label>
+                            <input type="text" id="publish-trip-id" placeholder="trip-uuid">
+                        </div>
+                        <button
+                            onclick="apiCall('POST', '/trips/' + document.getElementById('publish-trip-id').value + '/publish')">Publish
+                            Trip</button>
+                    </div>
+
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="method POST">POST</span> /trips/{tripId}/cancel
+                        </div>
+                        <div class="input-group">
+                            <label>Trip ID</label>
+                            <input type="text" id="cancel-trip-id" placeholder="trip-uuid">
+                        </div>
+                        <button
+                            onclick="apiCall('POST', '/trips/' + document.getElementById('cancel-trip-id').value + '/cancel')">Cancel
+                            Trip</button>
+                    </div>
+                </div>
+
+                <!-- ORGANIZERS SECTION -->
+                <div class="section">
+                    <h2>Organizers</h2>
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="method POST">POST</span> /trips/{tripId}/organizers
+                        </div>
+                        <div class="input-group">
+                            <label>Trip ID</label>
+                            <input type="text" id="org-add-trip-id" placeholder="trip-uuid">
+                        </div>
+                        <div class="input-group">
+                            <label>Body</label>
+                            <textarea id="org-add-body">
+{
+  "memberId": "member-uuid-to-add"
+}
+                            </textarea>
+                        </div>
+                        <button
+                            onclick="apiCall('POST', '/trips/' + document.getElementById('org-add-trip-id').value + '/organizers', 'org-add-body')">Add
+                            Organizer</button>
+                    </div>
+
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="method DELETE">DELETE</span> /trips/{tripId}/organizers/{memberId}
+                        </div>
+                        <div class="input-group">
+                            <label>Trip ID</label>
+                            <input type="text" id="org-rem-trip-id" placeholder="trip-uuid">
+                        </div>
+                        <div class="input-group">
+                            <label>Member ID</label>
+                            <input type="text" id="org-rem-member-id" placeholder="member-uuid">
+                        </div>
+                        <button
+                            onclick="apiCall('DELETE', '/trips/' + document.getElementById('org-rem-trip-id').value + '/organizers/' + document.getElementById('org-rem-member-id').value)">Remove
+                            Organizer</button>
+                    </div>
+                </div>
+
+                <!-- RSVP SECTION -->
+                <div class="section">
+                    <h2>RSVPs</h2>
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="method PUT">PUT</span> /trips/{tripId}/rsvp
+                        </div>
+                        <div class="input-group">
+                            <label>Trip ID</label>
+                            <input type="text" id="rsvp-trip-id" placeholder="trip-uuid">
+                        </div>
+                        <div class="input-group">
+                            <label>Body</label>
+                            <textarea id="rsvp-body">
+{
+  "response": "YES"
+}
+                            </textarea>
+                        </div>
+                        <button
+                            onclick="apiCall('PUT', '/trips/' + document.getElementById('rsvp-trip-id').value + '/rsvp', 'rsvp-body')">Set
+                            My RSVP</button>
+                    </div>
+
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="method GET">GET</span> /trips/{tripId}/rsvp/me
+                        </div>
+                        <div class="input-group">
+                            <label>Trip ID</label>
+                            <input type="text" id="rsvp-me-trip-id" placeholder="trip-uuid">
+                        </div>
+                        <button
+                            onclick="apiCall('GET', '/trips/' + document.getElementById('rsvp-me-trip-id').value + '/rsvp/me')">Get
+                            My RSVP</button>
+                    </div>
+
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="method GET">GET</span> /trips/{tripId}/rsvps
+                        </div>
+                        <div class="input-group">
+                            <label>Trip ID</label>
+                            <input type="text" id="rsvps-trip-id" placeholder="trip-uuid">
+                        </div>
+                        <button
+                            onclick="apiCall('GET', '/trips/' + document.getElementById('rsvps-trip-id').value + '/rsvps')">Get
+                            RSVP Summary</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="results-column">
+                <div id="result-container">
+                    <h3>Response</h3>
+                    <div id="result">No requests made yet.</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <script src="/js/footer.js"></script>
+    </footer>
+
+    <script src="/js/app.js"></script>
+    <script>
+        /**
+         * API Specification Reference:
+         * The full API specification is available in: documentation/site-content/RSVP api.openapi.yaml
+         */
+
+        let CONFIG = {};
+
+        // Load config on startup
+        async function loadConfig() {
+            try {
+                const response = await fetch('/config.json');
+                CONFIG = await response.json();
+                document.getElementById('config-status').textContent = `Connected to: ${CONFIG.apiHost}`;
+                document.getElementById('debugSubject').value = CONFIG.headers.debugSubject || 'dev|armin';
+            } catch (error) {
+                document.getElementById('config-status').textContent = 'Error loading config.json';
+                document.getElementById('config-status').style.color = 'red';
+                console.error('Config load error:', error);
+            }
+        }
+
+        async function apiCall(method, path, bodyId = null) {
+            const debugSubject = document.getElementById('debugSubject').value;
+            const resultDiv = document.getElementById('result');
+
+            resultDiv.innerHTML = '<span style="color: grey">Loading...</span>';
+
+            const url = `${CONFIG.apiHost}${path}`;
+            const headers = {
+                'X-Debug-Subject': debugSubject,
+                'Content-Type': 'application/json'
+            };
+
+            // Generate or use Idempotency Key for mutating requests
+            if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)) {
+                headers['Idempotency-Key'] = crypto.randomUUID();
+            }
+
+            const options = {
+                method: method,
+                headers: headers
+            };
+
+            let reqBody = null;
+            if (bodyId) {
+                try {
+                    const rawBody = document.getElementById(bodyId).value;
+                    reqBody = JSON.parse(rawBody);
+                    options.body = JSON.stringify(reqBody);
+                } catch (e) {
+                    resultDiv.innerHTML = `<span class="status-error">Error</span>\nInvalid JSON in body:\n${e.message}`;
+                    return;
+                }
+            }
+
+            try {
+                const startTime = performance.now();
+                const response = await fetch(url, options);
+                const endTime = performance.now();
+                const duration = (endTime - startTime).toFixed(0);
+
+                let data;
+                const contentType = response.headers.get("content-type");
+                if (contentType && contentType.indexOf("application/json") !== -1) {
+                    data = await response.json();
+                } else {
+                    data = await response.text();
+                }
+
+                const statusClass = response.ok ? 'status-success' : 'status-error';
+
+                let output = `<span class="response-status ${statusClass}">${response.status} ${response.statusText}</span> <span style="color: #666">(${duration}ms)</span>\n\n`;
+
+                output += `<strong>Request:</strong>\n${method} ${path}\n`;
+                if (reqBody) {
+                    output += JSON.stringify(reqBody, null, 2) + '\n';
+                }
+                output += '\n<strong>Response:</strong>\n';
+
+                if (typeof data === 'object') {
+                    output += JSON.stringify(data, null, 2);
+                } else {
+                    output += data;
+                }
+
+                resultDiv.innerHTML = output;
+
+            } catch (error) {
+                let errorDetails = `<span class="status-error">Network Error</span>\n<strong>${error.message}</strong>\n\n`;
+
+                if (error.message.includes('Failed to fetch')) {
+                    errorDetails += `<em>This is most likely a CORS (Cross-Origin Resource Sharing) error.</em>\n\n`;
+                    errorDetails += `Since GET requests work but mutating requests fail, your server is likely rejecting the preflight (OPTIONS) request for one of these reasons:\n`;
+                    errorDetails += `1. Missing <strong>Idempotency-Key</strong> in <code>Access-Control-Allow-Headers</code>.\n`;
+                    errorDetails += `2. Missing <strong>${method}</strong> in <code>Access-Control-Allow-Methods</code>.\n\n`;
+                    errorDetails += `<strong>Required Server Configuration:</strong>\n`;
+                    errorDetails += `<pre>Access-Control-Allow-Origin: * (or your origin)
+Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS
+Access-Control-Allow-Headers: Content-Type, X-Debug-Subject, Idempotency-Key</pre>`;
+                } else {
+                    errorDetails += `Check if the API server is running and accessible at ${CONFIG.apiHost}`;
+                }
+
+                resultDiv.innerHTML = errorDetails;
+            }
+        }
+
+        window.onload = loadConfig;
+    </script>
+</body>
+
+</html>

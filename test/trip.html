@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Test page for trip database modules - Trip Info, RSVP Status, and Artifacts">
+    <title>Trip Modules Test | Overland East Bay</title>
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/hero.css">
+    <link rel="stylesheet" href="../css/trip-info.css">
+    <link rel="stylesheet" href="../css/rsvplist.css">
+    <link rel="stylesheet" href="../css/trip-artifacts.css">
+    <!-- Cloudflare Web Analytics -->
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js'
+        data-cf-beacon='{"token": "933e079b3a424ffc98c6ce8278414d20"}'></script><!-- End Cloudflare Web Analytics -->
+</head>
+
+<body>
+    <header>
+        <script src="/js/nav.js?v=20260205193800"></script>
+    </header>
+
+    <div class="hero" style="background-image: url('/archive/images/death-valley-trip.hero.jpg');">
+        <div class="hero-content">
+            <h1 class="hero-title">Trip Database Modules Test</h1>
+            <p class="hero-subtitle">
+                Testing trip info, RSVP status, and artifacts modules
+            </p>
+        </div>
+    </div>
+
+    <main class="content-container">
+
+        <div class="callout-info">
+            <h3>ℹ️ Test Page</h3>
+            <p>This page demonstrates the three trip database modules using mock data. Each module fetches data from
+                <code>/content/inbox/temp/mock-trip-data.json</code> and displays it in a formatted layout.
+            </p>
+        </div>
+
+        <div class="callout-section">
+            <h3>⚙️ How Modules Load Data</h3>
+            <ul style="margin: 0.5rem 0 0 1.5rem; line-height: 1.8;">
+                <li><strong>If <code>data-api-url</code> is NOT specified</strong> → Fetches <code>/config.json</code>
+                    and uses <code>${config.apiHost}/trips/${tripId}</code></li>
+                <li><strong>If <code>data-api-url</code> IS specified</strong> → Uses that URL (for testing or override)
+                </li>
+            </ul>
+        </div>
+
+
+        <h2>🧪 API Testing Workflow</h2>
+        <p>Follow these steps to create a test trip and see how the modules update with live API data:</p>
+
+        <div class="callout-danger">
+            <h3>Step 1: Create a Trip Draft</h3>
+            <p>Go to <a href="/test/api.html" target="_blank" style="color: #28a745; font-weight: bold;">api.html</a>
+                and:</p>
+            <ol style="margin-left: 1.5rem;">
+                <li>Scroll to the <strong>Trips</strong> section</li>
+                <li>Find <strong>POST /trips</strong></li>
+                <li>Click <strong>"Create Trip Draft"</strong></li>
+                <li>Copy the <code>tripId</code> from the response</li>
+            </ol>
+        </div>
+
+        <div class="callout-warning">
+            <h3>Step 2: Update Trip Details</h3>
+            <p>In <a href="/test/api.html" target="_blank" style="color: #f59e0b; font-weight: bold;">api.html</a>:</p>
+            <ol style="margin-left: 1.5rem;">
+                <li>Find <strong>PATCH /trips/{tripId}</strong></li>
+                <li>Paste your <code>tripId</code> in the Trip ID field</li>
+                <li>Modify the JSON body with your trip details</li>
+                <li>Click <strong>"Update Trip"</strong></li>
+            </ol>
+            <p style="margin-top: 1rem; font-size: 0.9em; color: var(--text-secondary);">
+                <strong>Tip:</strong> The default JSON includes all fields needed for the modules to display properly.
+            </p>
+        </div>
+
+        <div class="callout-section">
+            <h3>Step 3: Publish the Trip</h3>
+            <p>In <a href="/test/api.html" target="_blank" style="color: #8b5cf6; font-weight: bold;">api.html</a>:</p>
+            <ol style="margin-left: 1.5rem;">
+                <li>Find <strong>POST /trips/{tripId}/publish</strong></li>
+                <li>Paste your <code>tripId</code></li>
+                <li>Click <strong>"Publish Trip"</strong></li>
+            </ol>
+        </div>
+
+        <div class="callout-section">
+            <h3>Step 4: Update Modules to Use Live Data</h3>
+            <p>Enter your trip ID to update all modules to use live API data:</p>
+
+            <div style="display: flex; gap: 10px; margin: 1rem 0; align-items: center;">
+                <input type="text" id="live-trip-id" placeholder="Paste your trip ID here"
+                    style="flex: 1; padding: 10px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); background: var(--surface-card); color: var(--text-primary); font-family: monospace;">
+                <button onclick="window.updateModulesWithTripId()"
+                    style="padding: 10px 20px; background: var(--accent); color: white; border: none; border-radius: var(--radius-sm); cursor: pointer; font-weight: 600; white-space: nowrap;">
+                    Update Modules
+                </button>
+            </div>
+
+            <div id="update-status" style="margin-top: 10px; font-size: 0.9em; color: var(--text-secondary);"></div>
+
+            <p style="margin-top: 1.5rem; font-size: 0.9em; color: var(--text-secondary);">
+                <strong>Or manually update:</strong> Change the <code>data-api-url</code> attributes below to:
+            </p>
+            <pre
+                style="background: #1e1e1e; color: #d4d4d4; padding: 1rem; border-radius: 8px; overflow-x: auto; font-size: 0.85em;"><code>data-api-url="/api/trips/YOUR_TRIP_ID"</code></pre>
+
+            <script>
+                window.updateModulesWithTripId = function () {
+                    const tripId = document.getElementById('live-trip-id').value.trim();
+                    const statusDiv = document.getElementById('update-status');
+
+                    if (!tripId) {
+                        statusDiv.innerHTML = '<span style="color: #dc3545;">⚠️ Please enter a trip ID</span>';
+                        return;
+                    }
+
+                    // Store trip ID in URL parameter and reload
+                    const url = new URL(window.location);
+                    url.searchParams.set('tripId', tripId);
+                    window.location.href = url.toString();
+                }
+
+                    // On page load, check if there's a tripId in URL and update modules
+                    // Check URL params immediately (before modules load)
+                    (function () {
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const tripId = urlParams.get('tripId');
+
+                        if (tripId) {
+                            // Update input field
+                            const input = document.getElementById('live-trip-id');
+                            if (input) {
+                                input.value = tripId;
+                            }
+
+                            // Update all module attributes
+                            const apiUrl = `/api/trips/${tripId}`;
+                            document.querySelectorAll('[data-trip-id]').forEach(el => {
+                                el.setAttribute('data-trip-id', tripId);
+                                el.setAttribute('data-api-url', apiUrl);
+                            })();
+
+                            // Allow Enter key to trigger update
+                            document.addEventListener('DOMContentLoaded', function () {
+                                const input = document.getElementById('live-trip-id');
+                                if (input) {
+                                    input.addEventListener('keypress', function (e) {
+                                        if (e.key === 'Enter') {
+                                            window.updateModulesWithTripId();
+                                        }
+                                    });
+                                }
+                            });
+                        }
+
+                        // Allow Enter key to trigger update
+                        const input = document.getElementById('live-trip-id');
+                        if (input) {
+                            input.addEventListener('keypress', function (e) {
+                                if (e.key === 'Enter') {
+                                    window.updateModulesWithTripId();
+                                }
+                            });
+                        }
+                    });
+            </script>
+        </div>
+
+        <hr style="margin: 3rem 0;">
+
+        <h2>📋 Available Public Trips</h2>
+        <p>Select a trip from the list below to automatically load it into the modules:</p>
+
+        <div id="trips-list-container" style="margin: 2rem 0;">
+            <div id="trips-loading" style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                Loading trips...
+            </div>
+            <div id="trips-error"
+                style="display: none; padding: 1rem; background-color: rgba(220, 53, 69, 0.1); border-left: 4px solid #dc3545; border-radius: var(--radius-md); color: #b91c1c;">
+            </div>
+            <div id="trips-list"
+                style="display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));"></div>
+        </div>
+
+        <script>
+            // Gemini: added 2025-12-30 - Load and display public trips from API
+            async function loadPublicTrips() {
+                const loadingDiv = document.getElementById('trips-loading');
+                const errorDiv = document.getElementById('trips-error');
+                const listDiv = document.getElementById('trips-list');
+
+                try {
+                    // Load config to get API host
+                    const configResponse = await fetch('/config.json');
+                    const config = await configResponse.json();
+
+                    // Fetch public trips
+                    const response = await fetch(`${config.apiHost}/trips`, {
+                        headers: {
+                            'X-Debug-Subject': config.headers.debugSubject || 'dev|armin'
+                        }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+
+                    const data = await response.json();
+                    const trips = data.trips || [];
+
+                    loadingDiv.style.display = 'none';
+
+                    if (trips.length === 0) {
+                        listDiv.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-secondary);">No public trips available</div>';
+                        return;
+                    }
+
+                    // Display trips as cards
+                    listDiv.innerHTML = trips.map(trip => `
+                        <div class="trip-card" style="background: var(--surface-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1rem; cursor: pointer; transition: all 0.2s;" 
+                             onclick="selectTrip('${trip.tripId}', '${escapeHtml(trip.name)}')"
+                             onmouseover="this.style.borderColor='var(--accent)'; this.style.transform='translateY(-2px)'"
+                             onmouseout="this.style.borderColor='var(--border-color)'; this.style.transform='translateY(0)'">
+                            <h4 style="margin: 0 0 0.5rem 0; color: var(--accent);">${escapeHtml(trip.name)}</h4>
+                            <div style="font-size: 0.85em; color: var(--text-secondary); margin-bottom: 0.5rem;">
+                                ${trip.startDate ? formatDate(trip.startDate) : 'Date TBD'}
+                                ${trip.endDate ? ' - ' + formatDate(trip.endDate) : ''}
+                            </div>
+                            <div style="font-size: 0.85em; color: var(--text-secondary);">
+                                Status: <span style="color: var(--text-primary);">${trip.status || 'Unknown'}</span>
+                            </div>
+                            <div style="margin-top: 0.75rem; font-size: 0.8em; font-family: monospace; color: var(--text-muted); word-break: break-all;">
+                                ${trip.tripId}
+                            </div>
+                        </div>
+                    `).join('');
+
+                } catch (error) {
+                    console.error('Error loading trips:', error);
+                    loadingDiv.style.display = 'none';
+                    errorDiv.style.display = 'block';
+                    errorDiv.textContent = `Unable to load trips: ${error.message}`;
+                }
+            }
+
+            window.selectTrip = function (tripId, tripName) {
+                // Navigate to page with trip ID in URL
+                const url = new URL(window.location);
+                url.searchParams.set('tripId', tripId);
+                window.location.href = url.toString();
+            }
+
+            function formatDate(dateStr) {
+                if (!dateStr) return '';
+                const date = new Date(dateStr + 'T00:00:00');
+                return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            }
+
+            function escapeHtml(str) {
+                const div = document.createElement('div');
+                div.textContent = str;
+                return div.innerHTML;
+            }
+
+            // Load trips when page loads
+            document.addEventListener('DOMContentLoaded', loadPublicTrips);
+        </script>
+
+
+        <script>
+            window.updateModulesWithTripId = function () {
+                const tripId = document.getElementById('live-trip-id').value.trim();
+                const statusDiv = document.getElementById('update-status');
+
+                if (!tripId) {
+                    statusDiv.innerHTML = '<span style="color: #dc3545;">⚠️ Please enter a trip ID</span>';
+                    return;
+                }
+
+                // Store trip ID in URL parameter and reload
+                const url = new URL(window.location);
+                url.searchParams.set('tripId', tripId);
+                window.location.href = url.toString();
+            }
+
+
+
+            // Allow Enter key to trigger update
+            document.addEventListener('DOMContentLoaded', function () {
+                const input = document.getElementById('live-trip-id');
+                if (input) {
+                    input.addEventListener('keypress', function (e) {
+                        if (e.key === 'Enter') {
+                            window.updateModulesWithTripId();
+                        }
+                    });
+                }
+            });
+        </script>
+
+
+        <hr style="margin: 3rem 0;">
+
+        <h2>Trip Information Module</h2>
+        <p>Displays trip details including name, dates, description, organizers, meeting location, and requirements.</p>
+
+        <!-- Trip Info Module -->
+        <!-- Gemini: added 2025-12-30 - Trip info module test -->
+        <div class="trip-info" data-trip-id="TRIP_2026_02_12_Death_Valley_Basecamp">
+        </div>
+
+        <hr style="margin: 3rem 0;">
+
+        <h2>RSVP Status Module</h2>
+        <p>Shows capacity status, attending members, and not-attending members with a visual capacity indicator.</p>
+
+        <!-- Trip RSVP Module -->
+        <!-- Gemini: updated 2026-01-05 - Using new production RSVP module -->
+        <div class="rsvp-container" id="rsvp-content">
+            <div class="loading-state">Loading trip details...</div>
+        </div>
+
+        <hr style="margin: 3rem 0;">
+
+        <h2>Trip Artifacts Module</h2>
+        <p>Displays downloadable resources and links including GPX files, schedules, and documents.</p>
+
+        <!-- Trip Artifacts Module -->
+        <!-- Gemini: added 2025-12-30 - Trip artifacts module test -->
+        <div class="trip-artifacts" data-trip-id="TRIP_2026_02_12_Death_Valley_Basecamp">
+        </div>
+
+        <script>
+            // Check URL params and update attributes IMMEDIATELY (before ANY scripts run)
+            ; (function () {
+                const urlParams = new URLSearchParams(window.location.search);
+                const tripIdFromUrl = urlParams.get('tripId');
+
+                console.log('trip.html: URL tripId =', tripIdFromUrl);
+
+                if (tripIdFromUrl) {
+                    console.log('trip.html: Updating attributes immediately for tripId:', tripIdFromUrl);
+
+                    // Update attributes in the HTML before modules initialize
+                    // Only set data-trip-id, let modules fetch config and build URL themselves
+                    const moduleSelectors = ['.trip-info', '.trip-artifacts']; // RSVP module does its own thing
+                    moduleSelectors.forEach(selector => {
+                        const elements = document.querySelectorAll(selector);
+                        elements.forEach(el => {
+                            console.log('trip.html: Setting', selector, 'tripId to', tripIdFromUrl);
+                            el.setAttribute('data-trip-id', tripIdFromUrl);
+                            // Remove data-api-url so module uses config.json
+                            el.removeAttribute('data-api-url');
+                        });
+                    });
+
+                    // Also update input field when DOM is ready
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const input = document.getElementById('live-trip-id');
+                        if (input) {
+                            input.value = tripIdFromUrl;
+                            console.log('trip.html: Updated input field');
+                        }
+                    });
+                }
+            })();
+        </script>
+
+
+        <hr style="margin: 3rem 0;">
+
+        <h2>Module Usage</h2>
+        <p>To use these modules on a trip page, include the CSS files in the <code>&lt;head&gt;</code> and the
+            JavaScript files before <code>&lt;/body&gt;</code>, then add the module HTML with appropriate
+            <code>data-trip-id</code> and <code>data-api-url</code> attributes.
+        </p>
+
+        <h3>Example HTML</h3>
+        <pre style="background: #f5f5f5; padding: 1rem; border-radius: 8px; overflow-x: auto;"><code>&lt;!-- Trip Info Module --&gt;
+&lt;div class="trip-info" 
+     data-trip-id="TRIP_2026_02_12_Death_Valley_Basecamp"
+     data-api-url="/api/trips/TRIP_2026_02_12_Death_Valley_Basecamp"&gt;
+&lt;/div&gt;
+
+&lt;!-- Trip RSVP Module --&gt;
+&lt;div class="rsvp-container" id="rsvp-content"&gt;
+    &lt;!-- Content injected via JS --&gt;
+&lt;/div&gt;
+
+&lt;!-- Trip Artifacts Module --&gt;
+&lt;div class="trip-artifacts" 
+     data-trip-id="TRIP_2026_02_12_Death_Valley_Basecamp"
+     data-api-url="/api/trips/TRIP_2026_02_12_Death_Valley_Basecamp"&gt;
+&lt;/div&gt;</code></pre>
+
+    </main>
+
+    <footer>
+        <script src="/js/footer.js?v=20260205193800"></script>
+    </footer>
+
+    <script src="/js/app.js?v=20260205193800"></script>
+    <!-- Gemini: changed 2026-01-05 - Load API interface and utils before modules -->
+    <script src="/js/api_interface.js?v=20260205193800"></script>
+    <script src="/js/utils.js?v=20260205193800"></script>
+    <script src="/js/trip_info.js?v=20260205193800" defer></script>
+    <!-- Gemini: added 2025-12-30 - Trip info module JavaScript -->
+    <script src="/js/trip_rsvplist.js?v=20260205193800" defer></script>
+    <!-- Gemini: added 2025-12-30 - Trip RSVP module JavaScript -->
+    <script src="/js/trip_artifacts.js?v=20260205193800" defer></script>
+    <!-- Gemini: added 2025-12-30 - Trip artifacts module JavaScript -->
+</body>
+
+</html>
