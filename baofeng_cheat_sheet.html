@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- pagetype: content -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baofeng Programming Cheat Sheet - Overland East Bay</title>
+    <meta name="description"
+        content="A quick reference guide for manually programming your Baofeng UV-5R radio. Learn how to set frequencies, offsets, and tones directly from the keypad.">
+
+    <!-- # Section Card Info
+    ## Text Section
+    slug: baofeng-cheat-sheet
+    title: # Baofeng Programming Cheat Sheet
+    text: A quick reference guide for manually programming your Baofeng UV-5R radio. Learn how to set frequencies, offsets, and tones directly from the keypad.
+    button: [View Cheat Sheet](baofeng_cheat_sheet.html)
+
+    ## Image Section
+    image: /images/baofeng_cheat_sheet.hero.png
+    theme: white -->
+
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="stylesheet" href="/css/style.css?v=202602062100">
+    <link rel="stylesheet" href="/css/hero.css?v=202602062100">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <!-- Cloudflare Web Analytics -->
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js'
+        data-cf-beacon='{"token": "933e079b3a424ffc98c6ce8278414d20"}'></script><!-- End Cloudflare Web Analytics -->
+</head>
+
+<body>
+    <header>
+        <script src="/js/nav.js?v=202602062100"></script>
+    </header>
+
+    <div class="hero" style="background-image: url('/images/baofeng_cheat_sheet.hero.png');">
+        <div class="hero-content">
+            <h1 class="hero-title">Baofeng Programming Cheat Sheet</h1>
+            <p class="hero-subtitle">
+                Master your radio in the field
+            </p>
+        </div>
+    </div>
+
+    <main class="content-container">
+        <section class="callout-warning">
+            <p><strong>Note:</strong> This guide is designed for the Baofeng UV-5R and similar models. Ensure you are
+                legally licensed to transmit on the frequencies you program.</p>
+        </section>
+
+        <img src="/images/baofeng_cheat_sheet.keypad-reference.png" alt="Baofeng UV-5R keypad reference"
+            class="content-image">
+
+        <hr>
+
+        <h2>Quick Reference: Simplex Programming</h2>
+        <p>For vehicle-to-vehicle communication (like our standard <strong>146.460 MHz</strong>), follow these steps
+            to save a channel.</p>
+
+        <ol>
+            <li><strong>Switch to VFO Mode</strong>: Press the <code>VFO/MR</code> button until you see a frequency
+                (not a channel number) on the display.</li>
+            <li><strong>Select Upper Display</strong>: Press <code>A/B</code> to move the arrow to the top line.
+            </li>
+            <li><strong>Delete Existing Channel</strong>:
+                <ul>
+                    <li>Press <code>MENU</code> -> <code>2</code> <code>8</code> -> <code>MENU</code>.</li>
+                    <li>Select the channel number (e.g., <code>001</code>) you want to use.</li>
+                    <li>Press <code>MENU</code> to confirm deletion (voice may say "Cancelled" or "Confirmed"), then
+                        <code>EXIT</code>.
+                    </li>
+                </ul>
+            </li>
+            <li><strong>Enter Frequency</strong>: Type the desired frequency on the keypad (e.g., <code>1</code>
+                <code>4</code> <code>6</code> <code>4</code> <code>6</code> <code>0</code>).
+            </li>
+            <li><strong>Save Channel</strong>:
+                <ul>
+                    <li>Press <code>MENU</code> -> <code>2</code> <code>7</code> -> <code>MENU</code>.</li>
+                    <li>Select the <em>same</em> channel number you just deleted (e.g., <code>001</code>).</li>
+                    <li>Press <code>MENU</code> to confirm (voice says "Receiving Memory"), then <code>EXIT</code>.
+                    </li>
+                </ul>
+            </li>
+        </ol>
+
+        <hr>
+
+        <h2>Quick Reference: Repeater Programming</h2>
+        <p>Repeaters require a transmit offset and often a sub-audible tone (CTCSS/DCS) to open the repeater.</p>
+
+        <ol>
+            <li><strong>Set Frequency</strong>: Follow steps 1-4 above to enter the <em>Receive</em> frequency.</li>
+            <li><strong>Set Offset Direction</strong>:
+                <ul>
+                    <li>Press <code>MENU</code> -> <code>2</code> <code>5</code> -> <code>MENU</code>.</li>
+                    <li>Select <code>+</code> or <code>-</code> based on the repeater info.</li>
+                    <li>Press <code>MENU</code> -> <code>EXIT</code>.</li>
+                </ul>
+            </li>
+            <li><strong>Set Offset Amount</strong>:
+                <ul>
+                    <li>Press <code>MENU</code> -> <code>2</code> <code>6</code> -> <code>MENU</code>.</li>
+                    <li>Enter the offset (e.g., <code>00.600</code> for 2m, <code>05.000</code> for 70cm).</li>
+                    <li>Press <code>MENU</code> -> <code>EXIT</code>.</li>
+                </ul>
+            </li>
+            <li><strong>Set Transmit Tone (PL)</strong>:
+                <ul>
+                    <li>Press <code>MENU</code> -> <code>1</code> <code>3</code> (T-CTCS) -> <code>MENU</code>.</li>
+                    <li>Select the tone frequency (e.g., <code>100.0</code>).</li>
+                    <li>Press <code>MENU</code> -> <code>EXIT</code>.</li>
+                </ul>
+            </li>
+            <li><strong>Save Receiving Frequency</strong>:
+                <ul>
+                    <li>Press <code>MENU</code> -> <code>2</code> <code>7</code> -> <code>MENU</code>.</li>
+                    <li>Select your memory channel (e.g., <code>002</code>).</li>
+                    <li>Press <code>MENU</code> -> <code>EXIT</code>.</li>
+                </ul>
+            </li>
+            <li><strong>Save Transmitting Frequency</strong> (Critical Step!):
+                <ul>
+                    <li><em>Correction for Baofeng:</em> You typically save to the <em>Same Channel</em> again.</li>
+                    <li>Press <code>MENU</code> -> <code>2</code> <code>7</code> -> <code>MENU</code>.</li>
+                    <li>Select the <strong>SAME</strong> channel number (e.g., <code>002</code>).</li>
+                    <li>Press <code>MENU</code> to confirm (voice says "Transmitting Memory"), then
+                        <code>EXIT</code>.
+                    </li>
+                </ul>
+            </li>
+        </ol>
+
+        <hr>
+
+        <h2>Essential Menu Settings</h2>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th align="left">Menu</th>
+                    <th align="left">Name</th>
+                    <th align="left">Setting</th>
+                    <th align="left">Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td align="left"><strong>0</strong></td>
+                    <td align="left">SQL</td>
+                    <td align="left">1-5</td>
+                    <td align="left">Squelch level. Lower is more sensitive.</td>
+                </tr>
+                <tr>
+                    <td align="left"><strong>2</strong></td>
+                    <td align="left">TXP</td>
+                    <td align="left">HIGH</td>
+                    <td align="left">Transmit power.</td>
+                </tr>
+                <tr>
+                    <td align="left"><strong>7</strong></td>
+                    <td align="left">TDR</td>
+                    <td align="left">OFF</td>
+                    <td align="left">Dual Watch. Turn OFF for programming to avoid confusion.</td>
+                </tr>
+                <tr>
+                    <td align="left"><strong>25</strong></td>
+                    <td align="left">SFT-D</td>
+                    <td align="left">OFF/+/ -</td>
+                    <td align="left">Frequency shift direction (for repeaters).</td>
+                </tr>
+                <tr>
+                    <td align="left"><strong>26</strong></td>
+                    <td align="left">OFFSET</td>
+                    <td align="left">00.600</td>
+                    <td align="left">Frequency shift amount (standard 2m offset).</td>
+                </tr>
+                <tr>
+                    <td align="left"><strong>13</strong></td>
+                    <td align="left">T-CTCS</td>
+                    <td align="left">OFF/Tone</td>
+                    <td align="left">Transmit Continuous Tone Coded Squelch System.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <hr>
+
+        <h2>Tips & Troubleshooting</h2>
+
+        <ul>
+            <li><strong>Can't enter frequency?</strong> Make sure you are in <strong>VFO Mode</strong> (frequency
+                mode), not Channel mode. Press <code>VFO/MR</code>.</li>
+            <li><strong>Menu not working?</strong> You cannot change some settings while in Channel Mode. Switch to
+                Frequency Mode first.</li>
+            <li><strong>"Cancel" when saving?</strong> You must <strong>Delete</strong> the channel (Menu 28) before
+                you can Save to it (Menu 27). Overwriting is not allowed directly.</li>
+            <li><strong>Chirp Software</strong>: For programming many channels, we highly recommend using a
+                programming cable and the free <a href="https://chirp.danplanet.com/">CHIRP software</a>.</li>
+        </ul>
+
+        <hr>
+
+        <h3>Useful Resources</h3>
+        <ul>
+            <li><a href="/ham-radio-guide.html"><strong>Overland East Bay - Getting Started with HAM Radio</strong></a>
+            </li>
+            <li><a
+                    href="https://www.buytwowayradios.com/blog/2016/08/how_to_manually_program_the_baofeng_uv-5r_from_the_keypad.html">Buy
+                    Two Way Radios - Manual Programming Guide</a></li>
+            <li><a href="https://baofengtech.com/">Baofeng Tech Manuals</a></li>
+        </ul>
+
+    </main>
+
+    <footer>
+        <script src="/js/footer.js"></script>
+    </footer>
+
+    <script src="/js/app.js"></script>
+</body>
+
+</html>
