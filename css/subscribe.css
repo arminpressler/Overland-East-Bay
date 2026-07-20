@@ -1,0 +1,83 @@
+/* Subscription Page Specifics */
+/* Gemini: changed 2025-12-30 - Extracted from style.css */
+
+.step-list-bullets {
+    list-style-type: disc;
+    margin-left: 20px;
+    margin-top: 5px;
+}
+
+.download-guide {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+    padding: var(--spacing-md);
+    background-color: rgba(212, 163, 115, 0.1);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+}
+
+.text-link {
+    color: var(--accent);
+    text-decoration: underline;
+    font-weight: 700;
+}
+
+.step-card {
+    background-color: var(--card-bg);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    margin-bottom: var(--spacing-lg);
+}
+
+.step-card h3 {
+    color: #fff;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+.sub-section {
+    margin-top: var(--spacing-lg);
+    padding-left: var(--spacing-md);
+    border-left: 2px solid var(--border-color);
+}
+
+.sub-section h4 {
+    color: var(--accent);
+}
+
+.step-list {
+    margin-left: var(--spacing-lg);
+}
+
+.step-list li {
+    margin-bottom: var(--spacing-sm);
+    color: var(--text-main);
+}
+
+.email-block {
+    display: inline-block;
+    background-color: var(--bg-color-secondary);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-family: monospace;
+    color: #fff;
+}
+
+.faq-section {
+    margin-top: var(--spacing-xl);
+}
+
+.faq-item {
+    margin-bottom: var(--spacing-lg);
+}
+
+.faq-item h4 {
+    margin-bottom: 0.25rem;
+    font-size: 1.1rem;
+}
+
+.faq-item p {
+    color: var(--text-muted);
+}

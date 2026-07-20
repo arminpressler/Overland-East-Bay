@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 
+        API Specification Reference:
+        The full API specification is available in: documentation/site-content/RSVP api.openapi.yaml
+    -->
+    <title>Trip RSVPs | Overland EastBay</title>
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/rsvplist.css">
+    <!-- Cloudflare Web Analytics -->
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js'
+        data-cf-beacon='{"token": "933e079b3a424ffc98c6ce8278414d20"}'></script><!-- End Cloudflare Web Analytics -->
+</head>
+
+<body class="index-layout">
+    <header>
+        <script src="../js/test_nav.js?v=20260205193800"></script>
+    </header>
+
+    <main>
+        <div class="rsvp-container" id="rsvp-content">
+            <!-- Content injected via JS -->
+            <div class="loading-state">Loading trip details...</div>
+        </div>
+    </main>
+
+    <footer>
+        <script src="../js/footer.js"></script>
+    </footer>
+
+    <!-- Gemini: changed 2026-01-05 - Load API interface and utils before module -->
+    <script src="../js/api_interface.js?v=20260205193800"></script>
+    <script src="../js/utils.js?v=20260205193800"></script>
+    <script src="../js/trip_rsvplist.js?v=20260205193800"></script>
+</body>
+
+</html>

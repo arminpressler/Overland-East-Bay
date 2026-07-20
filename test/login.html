@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Test | Overland EastBay</title>
+    <link rel="stylesheet" href="../css/style.css?v=20260205193800">
+    <style>
+        .test-content {
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+    </style>
+    <!-- Cloudflare Web Analytics -->
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js'
+        data-cf-beacon='{"token": "933e079b3a424ffc98c6ce8278414d20"}'></script><!-- End Cloudflare Web Analytics -->
+</head>
+
+<body class="index-layout">
+    <header>
+        <script src="../js/test_nav.js?v=20260205193800"></script>
+    </header>
+
+    <main>
+        <div class="test-content">
+            <h1>Login Implementation Test</h1>
+            <p>This page demonstrates the phased implementation of the Login button.</p>
+
+            <div class="callout-info">
+                <h3>PHASE 1: UI & Interaction</h3>
+                <p>Check the navigation bar for the <strong>Login</strong> button. In mobile view, check the hamburger
+                    menu.</p>
+                <p>Clicking Login should open the authentication choice modal.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Authentication Modal -->
+    <dialog id="ebo-auth-modal">
+        <button class="btn-close" onclick="this.closest('dialog').close()">&times;</button>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Sign in</h2>
+                <p class="muted">Choose your preferred method to continue.</p>
+            </div>
+            <div class="modal-body">
+                <a href="#" id="ebo-auth-google-link" class="auth-btn auth-btn-google">
+                    <svg width="18" height="18" viewBox="0 0 18 18">
+                        <path
+                            d="M17.64 8.29c.13.47.21.97.21 1.49 0 4.22-2.83 7.22-6.85 7.22-3.92 0-7.1-3.18-7.1-7.1C3.9 5.92 7.08 2.74 11 2.74c1.84 0 3.39.67 4.59 1.77L13.5 6.55c-1.22-1.12-2.92-1.64-4.5-1.64-2.8 0-5.1 2.3-5.1 5.1s2.3 5.1 5.1 5.1c3.1 0 4.4-2.1 4.6-3.2h-4.6V8.29h6.14z"
+                            fill="#4285F4" />
+                    </svg>
+                    Continue with Google
+                </a>
+                <a href="#" id="ebo-auth-apple-link" class="auth-btn auth-btn-apple">
+                    <svg width="16" height="16" viewBox="0 16 16" fill="currentColor">
+                        <path
+                            d="M12.182 4.147c-.201.241-.444.478-.727.712-.284.234-.596.467-.936.699-.34.232-.701.465-1.083.699-.382.234-.783.468-1.203.702-.42.234-.858.468-1.314.702-.456.234-.928.468-1.416.702-.488.234-.991.468-1.509.702-.518.234-1.05.468-1.596.702-.546.234-1.106.468-1.68.702-.574.234-1.162.468-1.764.702L.148 10.42a.375.375 0 0 1-.375-.375V6.375c0-.207.168-.375.375-.375h1.242c.602-.234 1.19-.468 1.764-.702.574-.234 1.134-.468 1.68-.702.546-.234 1.078-.468 1.596-.702.518-.234 1.021-.468 1.509-.702a110 110 0 0 1 1.416-.702c.456-.234.894-.468 1.314-.702.42-.234.821-.468 1.203-.702.382-.234.743-.467 1.083-.699.34-.232.652-.465.936-.699.283-.234.526-.471.727-.712a.375.375 0 0 1 .586.468zM8 0a.375.375 0 0 1 .375.375c0 .241-.243.478-.526.712-.284.234-.596.467-.936.699-.34.232-.701.465-1.083.699-.382.234-.783.468-1.203.702-.42.234-.858.468-1.314.702-.456.234-.928.468-1.416.702-.488.234-.991.468-1.509.702-.518.234-1.05.468-1.596.702-.546.234-1.106.468-1.68.702-.574.234-1.162.468-1.764.702L.148 10.42a.375.375 0 0 1-.375-.375V6.375c0-.207.168-.375.375-.375h1.242c.602-.234 1.19-.468 1.764-.702.574-.234 1.134-.468 1.68-.702.546-.234 1.078-.468 1.596-.702.518-.234 1.021-.468 1.509-.702a110 110 0 0 1 1.416-.702c.456-.234.894-.468 1.314-.702.42-.234.821-.468 1.203-.702.382-.234.743-.467 1.083-.699.34-.232.652-.465.936-.699.283-.234.526-.471.727-.712a.375.375 0 0 1 .586.468L8 0z" />
+                    </svg>
+                    Continue with Apple
+                </a>
+            </div>
+            <div class="modal-footer">
+                You’ll be returned to: <br><code id="ebo-auth-return-to-path"></code>
+            </div>
+        </div>
+    </dialog>
+
+    <footer>
+        <script src="../js/footer.js"></script>
+    </footer>
+</body>
+
+</html>
