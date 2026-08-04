@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- pagetype: content -->
+<!-- Gemini: created 2026-01-05 -->
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Index of test files for Overland EastBay website.">
+    <title>Test Files Index | Overland EastBay</title>
+
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="stylesheet" href="/css/hero.css?v=20260728102200">
+    <link rel="stylesheet" href="/css/style.css?v=20260728102200">
+    <!-- Cloudflare Web Analytics -->
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js'
+        data-cf-beacon='{"token": "933e079b3a424ffc98c6ce8278414d20"}'></script><!-- End Cloudflare Web Analytics -->
+</head>
+
+<body>
+    <header>
+        <script src="/js/nav.js?v=20260729190500"></script>
+    </header>
+
+    <div class="hero" style="background-image: url('/images/index.hero.jpg');">
+        <div class="hero-content">
+            <h1 class="hero-title">Test Files Index</h1>
+            <p class="hero-subtitle">Directory of test pages and experiments</p>
+        </div>
+    </div>
+
+<!-- Gemini: changed 2026-07-29 - Listed all Cloudflare Worker BFF endpoints with links to interactive test harness -->
+    <main class="content-container mw-800" style="margin: 2rem auto;">
+        <h2>Cloudflare Worker BFF API Endpoints</h2>
+        <p>Interactive testing harness and OpenAPI documentation available at <a href="web_bff_test.html" style="color: var(--accent); font-weight: 700;">web_bff_test.html</a>.</p>
+
+        <ul style="line-height: 1.8; font-size: 1rem;">
+            <li>
+                <strong style="color: #49cc90;">POST</strong> <a href="web_bff_test.html#auth-session" style="font-family: monospace; font-weight: bold;">/auth/session</a>
+                <span class="muted-text">— Google OAuth session creation (exchanges Google JWT for 7-day session token & cookie)</span>
+            </li>
+            <li>
+                <strong style="color: #61affe;">GET</strong> <a href="web_bff_test.html#auth-me" style="font-family: monospace; font-weight: bold;">/auth/me</a>
+                <span class="muted-text">— Authenticated member profile & trip agreement signature status check</span>
+            </li>
+            <li>
+                <strong style="color: #49cc90;">POST</strong> <a href="web_bff_test.html#auth-logout" style="font-family: monospace; font-weight: bold;">/auth/logout</a>
+                <span class="muted-text">— Terminate active session and clear cookies</span>
+            </li>
+            <li>
+                <strong style="color: #49cc90;">POST</strong> <a href="web_bff_test.html#signature" style="font-family: monospace; font-weight: bold;">/signature</a>
+                <span class="muted-text">— Group Trip Agreement signature submission with Turnstile bot verification</span>
+            </li>
+            <li>
+                <strong style="color: #61affe;">GET</strong> <a href="web_bff_test.html#rsvp-get" style="font-family: monospace; font-weight: bold;">/rsvp</a>
+                <span class="muted-text">— Fetch trip participant roster from GitHub DB (privacy-preserved: omits emails/phones)</span>
+            </li>
+            <li>
+                <strong style="color: #49cc90;">POST</strong> <a href="web_bff_test.html#rsvp-post" style="font-family: monospace; font-weight: bold;">/rsvp</a>
+                <span class="muted-text">— Submit/update trip RSVP and automatically record trip agreement signature</span>
+            </li>
+            <li>
+                <strong style="color: #61affe;">GET</strong> <a href="web_bff_test.html#trip-get" style="font-family: monospace; font-weight: bold;">/trip</a>
+                <span class="muted-text">— Fetch list of trip directories from the GitHub RSVPs database</span>
+            </li>
+        </ul>
+    </main>
+
+    <footer>
+        <script src="/js/footer.js?v=20260729190500"></script>
+    </footer>
+
+    <script src="/js/app.js?v=20260728102200"></script>
+</body>
+
+</html>

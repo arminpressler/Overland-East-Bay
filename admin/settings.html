@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | Overland EastBay</title>
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+    <link rel="stylesheet" href="../css/style.css?v=20260728102200">
+    <!-- Cloudflare Web Analytics -->
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js'
+        data-cf-beacon='{"token": "933e079b3a424ffc98c6ce8278414d20"}'></script><!-- End Cloudflare Web Analytics -->
+</head>
+
+<body class="index-layout">
+    <header>
+        <!-- Gemini: changed 2026-07-29 - Moved settings page to admin directory -->
+        <script src="../js/nav.js?v=20260729190500"></script>
+    </header>
+
+    <main>
+        <div class="profile-container" id="profile-content" style="max-width: 650px; margin: 3rem auto; padding: 0 1rem;">
+            <!-- Content injected via JS -->
+            <div class="profile-card">
+                <div class="profile-header">
+                    <div class="profile-avatar skeleton"></div>
+                    <div style="flex: 1">
+                        <div class="skeleton" style="width: 50%; height: 2rem; margin-bottom: 1rem;"></div>
+                        <div class="skeleton" style="width: 30%;"></div>
+                    </div>
+                </div>
+                <div class="skeleton" style="width: 100%; height: 100px;"></div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <script src="../js/footer.js?v=20260729190500"></script>
+    </footer>
+
+    <script>
+        /**
+         * Settings Profile Viewer
+         * Gemini: changed 2026-07-27 - Display authenticated Google OAuth profile and formatted JSON payload
+         */
+        const BFF_API_URL = 'https://ebo-signature-bff.armin-pressler.workers.dev';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const container = document.getElementById('profile-content');
+
+            try {
+                // Gemini: changed 2026-07-27 - Pass Bearer token header for iOS Safari cross-site cookie restriction bypass
+                const token = localStorage.getItem('ebo_session_token');
+                const headers = {};
+                if (token) headers['Authorization'] = `Bearer ${token}`;
+
+                // Fetch authenticated user profile from Cloudflare Worker BFF
+                const response = await fetch(`${BFF_API_URL}/auth/me`, {
+                    headers: headers,
+                    credentials: 'include'
+                });
+                if (!response.ok) {
+                    throw new Error(`Unauthorized (${response.status})`);
+                }
+
+                const userData = await response.json();
+                renderProfile(userData);
+
+            } catch (error) {
+                console.warn('Backend profile fetch unavailable or unauthorized:', error);
+                // Gemini: changed 2026-07-28 - Remove hardcoded mock fallback user. Clear stale session state and prompt sign-in.
+                localStorage.setItem('ebo_demo_logged_in', 'false');
+                localStorage.removeItem('ebo_session_token');
+                renderNotLoggedIn();
+            }
+        });
+
+        /**
+         * Renders user profile information, signature status, and conditional JSON code block.
+         * @param {Object} data User session and profile object.
+         */
+        function renderProfile(data) {
+            const container = document.getElementById('profile-content');
+            const name = data.name || data.profile?.name || 'Member';
+            const email = data.email || data.profile?.email || '';
+            const picture = data.picture || data.profile?.picture;
+            const initials = name ? name.substring(0, 2).toUpperCase() : 'ME';
+
+            const avatarHTML = picture 
+                ? `<img src="${picture}" alt="${name}" style="width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent, #d4a373);">`
+                : `<div class="profile-avatar">${initials}</div>`;
+
+            // Gemini: changed 2026-07-27 - Check signature status and render signature info card
+            const sigStatus = data.signature_status || { on_file: false };
+            let signatureHTML = '';
+
+            if (sigStatus.on_file) {
+                const formattedDate = sigStatus.signed_at 
+                    ? new Date(sigStatus.signed_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+                    : 'On File';
+
+                const docHash = sigStatus.document_hash || '';
+                const docHashShort = docHash ? (docHash.length > 24 ? `${docHash.substring(0, 24)}...` : docHash) : '';
+
+                signatureHTML = `
+                <div class="detail-group" style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid rgba(255,255,255,0.1);">
+                    <div class="detail-label" style="font-weight: 600; margin-bottom: 0.5rem; color: var(--accent, #d4a373);">Trip Agreement Signature</div>
+                    <div style="display: flex; align-items: flex-start; gap: 0.85rem; background: rgba(40, 167, 69, 0.12); border: 1px solid rgba(40, 167, 69, 0.3); padding: 0.9rem 1.1rem; border-radius: 12px; color: #75b798;">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; margin-top: 0.2rem;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600; color: #a3cfbb; font-size: 0.98rem;">Signature On File</div>
+                            <div style="font-size: 0.85rem; color: rgba(255,255,255,0.75); margin-top: 0.2rem;">
+                                Version: <strong>${sigStatus.version || '1.0.0'}</strong> &bull; Signed: <strong>${formattedDate}</strong>
+                                ${docHash ? `<div style="margin-top: 0.3rem;">Hash: <code style="font-family: monospace; color: #60a5fa; background: rgba(0,0,0,0.35); padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.82rem;" title="${docHash}">${docHashShort}</code></div>` : ''}
+                            </div>
+                            <div style="margin-top: 0.65rem;">
+                                <a href="group-trip-agreement.html" style="color: #60a5fa; text-decoration: underline; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.35rem;">
+                                    View Agreement →
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `;
+            } else {
+                signatureHTML = `
+                <div class="detail-group" style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid rgba(255,255,255,0.1);">
+                    <div class="detail-label" style="font-weight: 600; margin-bottom: 0.5rem; color: var(--accent, #d4a373);">Trip Agreement Signature</div>
+                    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; background: rgba(255, 193, 7, 0.1); border: 1px solid rgba(255, 193, 7, 0.25); padding: 0.85rem 1.1rem; border-radius: 12px; color: #ffda6a;">
+                        <div>
+                            <div style="font-weight: 600; font-size: 0.98rem;">No Signature On File</div>
+                            <div style="font-size: 0.85rem; color: rgba(255,255,255,0.75); margin-top: 0.15rem;">
+                                Required for participating in group trips.
+                            </div>
+                        </div>
+                        <a href="group-trip-agreement.html" style="background: var(--accent, #d4a373); color: #111; padding: 0.45rem 0.9rem; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.85rem;">Sign Agreement</a>
+                    </div>
+                </div>
+                `;
+            }
+
+            // Gemini: changed 2026-07-27 - Only render formatted JSON section if URL parameter test=yes is present
+            const urlParams = new URLSearchParams(window.location.search);
+            const showTestJson = urlParams.get('test')?.toLowerCase() === 'yes';
+            const profileJson = data.profile || data;
+
+            const jsonSectionHTML = showTestJson ? `
+                <div class="detail-group" style="margin-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem;">
+                    <div class="detail-label" style="font-weight: 600; margin-bottom: 0.75rem; color: var(--accent, #d4a373);">FORMATTED PROFILE JSON</div>
+                    <pre style="background: rgba(15, 15, 15, 0.9); padding: 1.25rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); overflow-x: auto; color: #a9dc76; font-family: monospace; font-size: 0.9rem; line-height: 1.4;"><code>${escapeHtml(JSON.stringify(profileJson, null, 2))}</code></pre>
+                </div>
+            ` : '';
+
+            container.innerHTML = `
+                <div class="profile-card" style="background: rgba(30, 30, 30, 0.85); padding: 2rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1);">
+                    <div class="profile-header" style="display: flex; align-items: center; gap: 1.25rem;">
+                        ${avatarHTML}
+                        <div class="profile-info">
+                            <h1 style="margin: 0 0 0.25rem 0; font-size: 1.6rem; color: #fff;">${name}</h1>
+                            <div class="email" style="color: rgba(255,255,255,0.7); font-size: 0.95rem;">${email}</div>
+                        </div>
+                    </div>
+                    ${signatureHTML}
+                    ${jsonSectionHTML}
+                </div>
+            `;
+        }
+
+        /**
+         * Renders sign-in prompt when not authenticated.
+         */
+        function renderNotLoggedIn() {
+            const container = document.getElementById('profile-content');
+            container.innerHTML = `
+                <div class="profile-card" style="text-align: center; padding: 3rem 1.5rem; background: rgba(30, 30, 30, 0.85); border-radius: 16px;">
+                    <h1 style="margin-top:0;">Please Sign In</h1>
+                    <p style="color: rgba(255,255,255,0.7);">You need to be signed in to view your profile settings.</p>
+                    <p class="muted-text">Click the <strong>Login</strong> button in the navigation bar above to sign in with Google.</p>
+                </div>
+            `;
+        }
+
+        /**
+         * Utility to escape HTML characters in formatted JSON string.
+         * @param {string} str 
+         * @returns {string}
+         */
+        function escapeHtml(str) {
+            return str
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+    </script>
+</body>
+
+</html>

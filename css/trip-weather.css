@@ -1,0 +1,106 @@
+/* Trip Weather Module */
+/* Gemini: created 2025-12-30 - Weather widget for trip pages */
+
+.trip-weather {
+    border: 1px solid var(--border-color);
+    background: var(--surface-card);
+    border-radius: var(--radius-lg);
+    padding: 14px 16px;
+    max-width: 360px;
+    font-family: var(--font-main);
+}
+
+.trip-weather .tw-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.trip-weather .tw-kicker {
+    font-size: 12px;
+    color: var(--text-secondary);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.trip-weather .tw-location {
+    font-size: 16px;
+    font-weight: 500;
+    margin-top: 4px;
+}
+
+.trip-weather .tw-updated {
+    font-size: 12px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+.trip-weather .tw-main {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.trip-weather .tw-icon {
+    display: none;
+    /* toggled on when an icon is available */
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+}
+
+.trip-weather .tw-temp {
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 1;
+}
+
+.trip-weather .tw-summary {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 6px;
+}
+
+.trip-weather .tw-details {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.trip-weather .tw-error {
+    display: none;
+    margin-top: 10px;
+    font-size: 13px;
+    color: #b91c1c;
+    /* allowed hardcoded danger color */
+}
+
+/* Layout Utilities (replacing inline styles) */
+.weather-container {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+
+.weather-col-current {
+    flex: 1;
+    min-width: 300px;
+}
+
+.weather-col-forecast {
+    flex: 2;
+    min-width: 300px;
+}
+
+.weather-chart-wrapper {
+    position: relative;
+    height: 250px;
+    width: 100%;
+    margin-top: 1rem;
+}
