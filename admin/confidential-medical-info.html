@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+title: Confidential Medical & Emergency Information - Overland East Bay
+description: Confidential Medical & Emergency Information Profile for Overland East Bay backcountry trips.
+pagetype: content
+build: prompts/build content page.md
+comments: "Gemini: created 2026-07-28 - Standalone Confidential Medical & Emergency Information page"
+hero:
+  background: /images/group-trip-agreement.card.png
+  title: Confidential Medical & Emergency Info
+  subtitle: Sealed Emergency Profile for Backcountry Travel & First Responders
+meta:
+  source_file: public/admin/confidential-medical-info.html
+  refresh_date: 2026-07-28
+-->
+
+<head>
+    <!-- Gemini: created 2026-07-28 - Standalone Confidential Medical & Emergency Information page -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confidential Medical & Emergency Information - Overland East Bay</title>
+    <meta name="description"
+        content="Confidential Medical & Emergency Information Profile for Overland East Bay backcountry trips.">
+
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="stylesheet" href="/css/style.css?v=20260712032000">
+    <link rel="stylesheet" href="/css/hero.css?v=20260712032000">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <!-- Cloudflare Web Analytics -->
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js'
+        data-cf-beacon='{"token": "933e079b3a424ffc98c6ce8278414d20"}'></script>
+    <!-- End Cloudflare Web Analytics -->
+</head>
+
+<body>
+    <header>
+        <script src="/js/nav.js?v=20260729190500"></script>
+    </header>
+
+    <div class="hero" style="background-image: url('/images/group-trip-agreement.card.png');">
+        <div class="hero-content">
+            <h1 class="hero-title">Confidential Medical & Emergency Info</h1>
+            <p class="hero-subtitle">
+                Sealed Emergency Profile for Backcountry Travel & First Responders
+            </p>
+        </div>
+    </div>
+
+    <main class="content-container">
+        <div style="margin-bottom: 1.5rem;">
+            <a href="group-trip-agreement.html" style="color: #60a5fa; text-decoration: none; font-weight: 500;">
+                ← Back to Group Trip Agreement & Waiver
+            </a>
+        </div>
+
+        <div class="download-container text-center" style="margin-bottom: 2rem; display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+            <button class="btn btn-download-pdf" id="btn-download-medical-pdf" onclick="downloadPDF('/artifacts/confidential-medical-info-form.pdf', 'Confidential_Medical_and_Emergency_Info.pdf')">
+                📥 Download Medical Info Form (PDF)
+            </button>
+        </div>
+
+        <h1>CONFIDENTIAL MEDICAL & EMERGENCY INFORMATION</h1>
+
+        <p class="text-center"><em>(Print individually—one sheet per participant. Fill out and place in a sealed envelope or vehicle glovebox)</em></p>
+
+        <section class="callout-info">
+            <p><strong>Trip Name / Destination:</strong> __________________________________________________</p>
+            <p><strong>Trip Dates:</strong> ___________________________________________________________</p>
+        </section>
+
+        <section class="callout-warning">
+            <p><strong>INSTRUCTIONS:</strong> <em>Filling out this form is completely voluntary but highly recommended for remote backcountry travel. This document is strictly confidential. Place the completed sheet in a sealed envelope with your name on it inside your vehicle glovebox. Trip organizers do not collect these envelopes. It will only be accessed or turned over to emergency personnel/first responders in the event of a medical emergency during a trip.</em></p>
+        </section>
+
+        <h3>1. Participant Identification</h3>
+        <ul>
+            <li><strong>Full Legal Name:</strong> ______________________________________________________</li>
+            <li><strong>Date of Birth:</strong> ______________________</li>
+            <li><strong>Primary Phone Number:</strong> ________________________________________________</li>
+            <li><strong>Vehicle Info on Trip (Year, Make, Model, Color):</strong> _______________________</li>
+        </ul>
+
+        <h3>2. Primary Emergency Contacts</h3>
+        <p><strong>Contact 1 (Main):</strong></p>
+        <ul>
+            <li>Name: ___________________________________________________________</li>
+            <li>Relationship: ____________________________________________________</li>
+            <li>Phone Number(s): _________________________________________________</li>
+        </ul>
+        <p><strong>Contact 2 (Alternative):</strong></p>
+        <ul>
+            <li>Name: ___________________________________________________________</li>
+            <li>Relationship: ____________________________________________________</li>
+            <li>Phone Number(s): _________________________________________________</li>
+        </ul>
+
+        <h3>3. Medical Profile (For First Responders & Search & Rescue)</h3>
+        <ul>
+            <li><strong>Blood Type (If known):</strong> ___________</li>
+            <li>
+                <strong>Severe Allergies</strong> (e.g., bee stings, penicillin, latex, specific foods):<br>
+                ___________________________________________________________________________<br>
+                ___________________________________________________________________________
+            </li>
+            <li>
+                <strong>Current Medications</strong> (Crucial for first responders, especially blood thinners, insulin, or heart medications):<br>
+                ___________________________________________________________________________<br>
+                ___________________________________________________________________________
+            </li>
+            <li>
+                <strong>Critical Medical Conditions / History</strong> (e.g., asthma, diabetes, epilepsy, cardiac history, severe joint issues):<br>
+                ___________________________________________________________________________<br>
+                ___________________________________________________________________________
+            </li>
+            <li>
+                <strong>Medical Devices</strong> (e.g., pacemaker, epi-pen in vehicle, inhaler):<br>
+                ___________________________________________________________________________
+            </li>
+        </ul>
+
+        <h3>4. Health Insurance Information (Optional)</h3>
+        <ul>
+            <li><strong>Insurance Provider:</strong> ___________________________________________________</li>
+            <li><strong>Policy / Group Number:</strong> _______________________________________________</li>
+        </ul>
+
+        <hr>
+
+        <h3>AUTHORIZATION FOR EMERGENCY RELEASE</h3>
+        <p><em>By signing below, I certify that the information provided is accurate and voluntary. I authorize my trip mates to hand this document directly to emergency medical technicians, doctors, or Search and Rescue personnel if I am incapacitated or unable to communicate during the trip.</em></p>
+
+        <p>Participant Signature: _________________________________________</p>
+        <p>Date: ______________</p>
+
+        <div class="download-container text-center" style="margin-top: 2.5rem; margin-bottom: 1rem; display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+            <button class="btn btn-download-pdf" onclick="downloadPDF('/artifacts/confidential-medical-info-form.pdf', 'Confidential_Medical_and_Emergency_Info.pdf')">
+                📥 Download Medical Info Form (PDF)
+            </button>
+        </div>
+    </main>
+
+    <footer>
+        <script src="/js/footer.js?v=20260729190500"></script>
+    </footer>
+
+    <script src="/js/app.js?v=20260712042500"></script>
+    <script src="/js/agreement.js?v=20260729190500"></script>
+</body>
+
+</html>
