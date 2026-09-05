@@ -1,0 +1,88 @@
+<!--
+---
+title: Site Search
+description: Instant search across Overland East Bay guides, trips, news, and resources.
+hero_image: images/resources.hero.jpg
+page_style: standard
+---
+-->
+<!-- Gemini: created 2026-09-03 - Static Site Search Page using Pagefind (GH Issue #17) agent change -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site Search - Overland East Bay</title>
+    <meta name="description" content="Search technical guides, trail packing lists, radio cheatsheets, upcoming trips, and news from Overland East Bay.">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="stylesheet" href="/css/style.css?v=20260903171600">
+    <link rel="stylesheet" href="/css/hero.css?v=20260728102200">
+    <!-- Gemini: changed 2026-09-05 - Bump version parameter for mobile search modal clipping fix (GH Issue #38) agent change -->
+    <link rel="stylesheet" href="/css/search.css?v=20260905131500">
+    <link rel="stylesheet" href="/pagefind/pagefind-ui.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <!-- Cloudflare Web Analytics -->
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js'
+        data-cf-beacon='{"token": "933e079b3a424ffc98c6ce8278414d20"}'></script>
+    <!-- End Cloudflare Web Analytics -->
+</head>
+
+<body class="index-layout" data-pagefind-ignore>
+    <header>
+        <script src="/js/nav.js?v=20260903172000"></script>
+    </header>
+
+    <div class="hero" style="background-image: url('/images/resources.hero.jpg');">
+        <div class="hero-content">
+            <h1 class="hero-title">Site Search</h1>
+            <p class="hero-subtitle">
+                Search guides, trail manuals, upcoming trips, and club announcements.
+            </p>
+        </div>
+    </div>
+
+    <main class="search-page-section">
+        <div class="search-page-card">
+            <div id="search-page-container"></div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Overland East Bay. Community-driven overland adventures in Northern California and beyond.</p>
+    </footer>
+
+    <script src="/pagefind/pagefind-ui.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const pagefind = new PagefindUI({
+                element: "#search-page-container",
+                bundlePath: "/pagefind/",
+                showImages: true,
+                autofocus: true,
+                resetStyles: false
+            });
+
+            // Handle deep-link query parameter ?q=...
+            const urlParams = new URLSearchParams(window.location.search);
+            const query = urlParams.get('q');
+            if (query) {
+                // Prepopulate and trigger search
+                const triggerSearch = () => {
+                    const searchInput = document.querySelector('#search-page-container .pagefind-ui__search-input');
+                    if (searchInput) {
+                        searchInput.value = query;
+                        searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+                    } else {
+                        setTimeout(triggerSearch, 50);
+                    }
+                };
+                triggerSearch();
+            }
+        });
+    </script>
+</body>
+
+</html>

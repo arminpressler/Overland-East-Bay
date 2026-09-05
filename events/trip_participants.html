@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- pagetype: content-event-participants -->
+    <!-- Gemini: created 2026-07-28 - Standalone Trip Participants Page displaying roster (pictures & names, NO EMAIL) -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Trip Participants Roster for Overland EastBay events. View team members attending this trip.">
+    <title>Trip Participants Roster | Overland EastBay</title>
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+    <link rel="stylesheet" href="../css/style.css?v=20260903171600">
+    <link rel="stylesheet" href="../css/rsvp_module.css?v=20260728120300">
+</head>
+
+<body data-pagefind-filter="type:Trip">
+    <header>
+        <script src="../js/nav.js?v=20260903172000"></script>
+    </header>
+
+    <main class="content-container">
+        <div class="ebo-participants-container">
+            <div style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
+                <div>
+                    <h1 id="trip-title" style="margin-bottom: 0.3rem;">Trip Participants Roster</h1>
+                    <p id="trip-subtitle" style="color: var(--text-muted, #94a3b8); margin: 0;">
+                        Confirmed team members participating in this expedition.
+                    </p>
+                    <div class="ebo-participants-counter" id="participants-counter"></div>
+                </div>
+                <div>
+                    <a id="back-to-trip-btn" href="#" class="btn btn-secondary" style="font-size: 0.9rem; padding: 0.5rem 1rem;">
+                        ← Back to Trip Page
+                    </a>
+                </div>
+            </div>
+
+            <div class="ebo-participants-table-wrapper">
+                <table class="ebo-participants-table" id="participants-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50%;">Member</th>
+                            <th style="width: 25%;">Status</th>
+                            <th style="width: 25%;">RSVP Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="participants-table-body">
+                        <tr>
+                            <td colspan="3" style="text-align: center; color: #94a3b8; padding: 2rem;">
+                                Loading participants roster...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <script src="../js/footer.js?v=20260729190500"></script>
+    </footer>
+
+    <script src="../js/app.js"></script>
+    <script>
+        /**
+         * Loads trip participants from Worker BFF API, local static JSON files, and localStorage.
+         * Gemini: created 2026-07-28 - Participant loading logic excluding email fields
+         */
+        const loadRosterPage = async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const tripId = urlParams.get('tripId') || 'TRIP_2027_04_30_Utah_Pony_Express';
+            const bffUrl = 'https://ebo-signature-bff.armin-pressler.workers.dev';
+
+            const titleEl = document.getElementById('trip-title');
+            const backBtn = document.getElementById('back-to-trip-btn');
+            const tbody = document.getElementById('participants-table-body');
+
+            const readableTitle = tripId.replace(/^TRIP_\d{4}_\d{2}_\d{2}_/, '').replace(/_/g, ' ');
+            titleEl.textContent = `${readableTitle} — Participants`;
+            backBtn.href = `${tripId}.html`;
+
+            let participants = [];
+
+            // 1. Fetch from BFF Worker API with 2.5s timeout
+            // Gemini: changed 2026-07-28 - Added AbortController timeout to prevent hanging on slow network requests
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 2500);
+                const resp = await fetch(`${bffUrl}/rsvp?tripId=${encodeURIComponent(tripId)}`, { signal: controller.signal });
+                clearTimeout(timeoutId);
+                if (resp.ok) {
+                    const data = await resp.json();
+                    if (data.rsvps && Array.isArray(data.rsvps)) {
+                        participants = data.rsvps;
+                    }
+                }
+            } catch (err) {
+                console.warn('Could not fetch RSVPs from BFF Worker API (timeout/error):', err);
+            }
+
+            // 2. Merge local storage backup records (for local dev testing when user has signed & RSVP'd)
+            // Gemini: changed 2026-08-22 - Preserve server status/timestamps and sync localStorage when merging
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.startsWith(`ebo_rsvp_${tripId}_`)) {
+                    try {
+                        const localItem = JSON.parse(localStorage.getItem(key));
+                        if (localItem) {
+                            const localName = (localItem.name || '').toLowerCase().trim();
+                            const localEmail = (localItem.email || '').toLowerCase().trim();
+                            const localSub = localItem.sub || '';
+
+                            const existingIdx = participants.findIndex(p =>
+                                (localSub && p.sub && p.sub === localSub) ||
+                                (localEmail && p.email && p.email.toLowerCase().trim() === localEmail) ||
+                                (localName && p.name && p.name.toLowerCase().trim() === localName)
+                            );
+
+                            if (existingIdx !== -1) {
+                                // Server record takes precedence for status and timestamp; localItem fills in missing fields
+                                participants[existingIdx] = { ...localItem, ...participants[existingIdx] };
+                                // Sync updated record back to localStorage so stale status does not persist
+                                localStorage.setItem(key, JSON.stringify(participants[existingIdx]));
+                            } else {
+                                participants.push(localItem);
+                            }
+                        }
+                    } catch (e) {}
+                }
+            }
+
+            // Gemini: changed 2026-08-18 - Added waitlist status badges, counter pills, and sorted roster display
+            const goingParticipants = participants.filter(p => !p.status || p.status === 'Going');
+            const waitlistedParticipants = participants.filter(p => p.status === 'Waitlist');
+            const notGoingParticipants = participants.filter(p => p.status === 'Not Going' || p.status === 'No Longer Going');
+
+            const goingCount = goingParticipants.length;
+            const waitlistCount = waitlistedParticipants.length;
+            const notGoingCount = notGoingParticipants.length;
+            const totalCount = participants.length;
+
+            // Sort within groups by created_at ascending
+            goingParticipants.sort((a, b) => new Date(a.created_at || 0) - new Date(b.created_at || 0));
+            waitlistedParticipants.sort((a, b) => new Date(a.created_at || 0) - new Date(b.created_at || 0));
+            notGoingParticipants.sort((a, b) => new Date(a.created_at || 0) - new Date(b.created_at || 0));
+
+            const orderedParticipants = [...goingParticipants, ...waitlistedParticipants, ...notGoingParticipants];
+
+            const counterEl = document.getElementById('participants-counter');
+            if (counterEl) {
+                counterEl.innerHTML = `
+                    <span>Total Responses: <strong>${totalCount}</strong></span>
+                    <span style="color:#334155;">|</span>
+                    <span class="ebo-counter-going">✓ ${goingCount} Going</span>
+                    ${waitlistCount > 0 ? `<span style="color:#334155;">|</span> <span style="color: #fbbf24; font-weight: 600;">⏳ ${waitlistCount} Waitlisted</span>` : ''}
+                    ${notGoingCount > 0 ? `<span style="color:#334155;">|</span> <span class="ebo-counter-notgoing">❌ ${notGoingCount} Not Going</span>` : ''}
+                `;
+            }
+
+            // Function to render participant table rows
+            // Gemini: changed 2026-08-18 - Render Waitlist status badges with rank and inline status change button
+            const renderTable = (userData = null) => {
+                const userEmail = userData?.email || userData?.user?.email || '';
+                const userName = userData?.name || userData?.user?.name || userData?.profile?.name || '';
+                const userSub = userData?.sub || userData?.user?.sub || '';
+
+                if (orderedParticipants.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="3" style="text-align: center; color: #94a3b8; padding: 2.5rem;">
+                                No confirmed participants yet. Be the first to RSVP!
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                tbody.innerHTML = orderedParticipants.map(p => {
+                    const rawName = p.name || 'Overland Member';
+                    const formattedName = formatDisplayName(rawName);
+                    const initial = rawName.charAt(0).toUpperCase();
+                    const avatar = p.picture ? `<img src="${p.picture}" alt="${formattedName}" class="ebo-participant-avatar">`
+                                              : `<div class="ebo-participant-avatar">${initial}</div>`;
+                    const dateStr = p.created_at ? new Date(p.created_at).toLocaleDateString() : 'Confirmed';
+
+                    let statusBadge = `<span class="ebo-status-badge-going">✓ Going</span>`;
+                    if (p.status === 'Waitlist') {
+                        const waitRank = waitlistedParticipants.findIndex(w => (w.email && p.email && w.email === p.email) || w.name === p.name) + 1;
+                        statusBadge = `<span style="background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); padding: 0.2rem 0.65rem; border-radius: 12px; font-size: 0.85rem; font-weight: 600;">⏳ Waitlist #${waitRank > 0 ? waitRank : 1}</span>`;
+                    } else if (p.status === 'Not Going' || p.status === 'No Longer Going') {
+                        statusBadge = `<span class="ebo-status-badge-notgoing">❌ Not Going</span>`;
+                    }
+
+                    const isMe = (userSub && p.sub && p.sub === userSub) ||
+                                 (userEmail && p.email && p.email.toLowerCase() === userEmail.toLowerCase()) ||
+                                 (userName && p.name && p.name.toLowerCase().trim() === userName.toLowerCase().trim());
+
+                    const meBadge = isMe ? `<span style="font-size:0.75rem; background:#334155; color:#38bdf8; padding:0.15rem 0.45rem; border-radius:4px; margin-left:0.4rem; font-weight:600;">You</span>` : '';
+                    const changeBtn = isMe ? `<button class="btn-change-status-inline" data-current-status="${p.status || 'Going'}" style="margin-left: 0.5rem; background: #334155; color: #f8fafc; border: 1px solid #475569; padding: 0.25rem 0.6rem; border-radius: 6px; font-size: 0.8rem; cursor: pointer; transition: background 0.15s;">✏️ Change Status</button>` : '';
+
+                    return `
+                        <tr>
+                            <td>
+                                <div class="ebo-participant-profile">
+                                    ${avatar}
+                                    <span style="font-weight: 600;">${escapeHtml(formattedName)} ${meBadge}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 0.4rem;">
+                                    ${statusBadge}
+                                    ${changeBtn}
+                                </div>
+                            </td>
+                            <td style="color: #94a3b8; font-size: 0.9rem;">
+                                ${dateStr}
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+
+                // Attach inline change status button handler
+                document.querySelectorAll('.btn-change-status-inline').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const currentStatus = btn.dataset.currentStatus;
+                        openInlineStatusModal(tripId, currentStatus, bffUrl, currentUserData, token);
+                    });
+                });
+            };
+
+            // Read cached user profile from localStorage for instant renders
+            // Gemini: changed 2026-07-28 - Instantly initialize currentUserData from cached profile
+            let currentUserData = null;
+            const cachedProfileStr = localStorage.getItem('ebo_user_profile');
+            if (cachedProfileStr) {
+                try {
+                    currentUserData = JSON.parse(cachedProfileStr);
+                } catch (e) {}
+            }
+
+            // Render table immediately with cached profile & roster data
+            renderTable(currentUserData);
+
+            // Asynchronously verify current user info with BFF to update token and profile
+            const token = localStorage.getItem('ebo_session_token');
+            if (token) {
+                try {
+                    const meResp = await fetch(`${bffUrl}/auth/me`, {
+                        headers: { 'Authorization': `Bearer ${token}` },
+                        credentials: 'include'
+                    });
+                    if (meResp.ok) {
+                        currentUserData = await meResp.json();
+                        localStorage.setItem('ebo_user_profile', JSON.stringify(currentUserData));
+                        renderTable(currentUserData);
+                    }
+                } catch (e) {}
+            }
+
+            // Listen for top nav auth login/logout events for live updates
+            // Gemini: changed 2026-07-28 - Listen for ebo:auth:success and ebo:auth:logout for dynamic roster updates
+            window.addEventListener('ebo:auth:success', (e) => {
+                renderTable(e.detail || null);
+            });
+            window.addEventListener('ebo:auth:logout', () => {
+                renderTable(null);
+            });
+        };
+
+        // Gemini: changed 2026-07-28 - Immediate script execution if DOMContentLoaded has already fired
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadRosterPage);
+        } else {
+            loadRosterPage();
+        }
+
+        /**
+         * Opens status change modal directly on participant roster page.
+         * Gemini: created 2026-07-28
+         */
+        function openInlineStatusModal(tripId, currentStatus, bffUrl, currentUserData, token) {
+            const existing = document.getElementById('ebo-inline-status-modal');
+            if (existing) existing.remove();
+
+            const isCurrentlyGoing = currentStatus === 'Going';
+
+            const modalHtml = `
+                <div class="ebo-modal-backdrop" id="ebo-inline-status-modal">
+                    <div class="ebo-modal-card" style="max-width: 460px;">
+                        <div class="ebo-modal-header">
+                            <h3>🔄 Update Your Status</h3>
+                            <button class="ebo-modal-close" id="ebo-inline-close-btn">&times;</button>
+                        </div>
+                        <div class="ebo-modal-body">
+                            <p style="font-weight: 600; color: #f8fafc; margin-top: 0;">
+                                Current Status: ${isCurrentlyGoing ? '✓ Going' : '❌ Not Going'}
+                            </p>
+                            <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1.25rem;">
+                                <button id="inline-btn-going" class="btn" style="background: linear-gradient(135deg, #2b9348 0%, #15803d 100%); color: #ffffff; padding: 0.75rem; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                                    ✓ Set to Going
+                                </button>
+                                <button id="inline-btn-notgoing" class="btn" style="background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%); color: #ffffff; padding: 0.75rem; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                                    ❌ Set to No Longer Going
+                                </button>
+                            </div>
+                        </div>
+                        <div class="ebo-modal-footer">
+                            <button id="ebo-inline-cancel-btn" style="background: #334155; color: #ffffff; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer;">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+            const modalEl = document.getElementById('ebo-inline-status-modal');
+            const closeBtn = document.getElementById('ebo-inline-close-btn');
+            const cancelBtn = document.getElementById('ebo-inline-cancel-btn');
+            const goingBtn = document.getElementById('inline-btn-going');
+            const notGoingBtn = document.getElementById('inline-btn-notgoing');
+
+            const closeModal = () => modalEl.remove();
+
+            closeBtn.addEventListener('click', closeModal);
+            cancelBtn.addEventListener('click', closeModal);
+            modalEl.addEventListener('click', (e) => {
+                if (e.target === modalEl) closeModal();
+            });
+
+            const submitStatus = async (newStatus) => {
+                goingBtn.disabled = true;
+                notGoingBtn.disabled = true;
+
+                const user = currentUserData?.user || currentUserData || {};
+                const name = user.name || user.profile?.name || 'Member';
+                const picture = user.picture || user.profile?.picture || '';
+                const email = user.email || user.profile?.email || '';
+                const cleanEmail = email.replace(/[^a-z0-9._-]/g, '_');
+
+                const rsvpPayload = {
+                    schema_version: '1.0.0',
+                    trip_id: tripId,
+                    sub: user.sub || '',
+                    name: name,
+                    picture: picture,
+                    status: newStatus,
+                    agreement_accepted: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                };
+
+                const headers = { 'Content-Type': 'application/json' };
+                if (token) headers['Authorization'] = `Bearer ${token}`;
+
+                let savedRsvp = rsvpPayload;
+                try {
+                    const resp = await fetch(`${bffUrl}/rsvp`, {
+                        method: 'POST',
+                        headers: headers,
+                        credentials: 'include',
+                        body: JSON.stringify(rsvpPayload)
+                    });
+                    if (resp.ok) {
+                        const data = await resp.json().catch(() => ({}));
+                        if (data && data.rsvp) {
+                            savedRsvp = { ...rsvpPayload, ...data.rsvp };
+                        }
+                    }
+                } catch (e) {}
+
+                if (cleanEmail) {
+                    localStorage.setItem(`ebo_rsvp_${tripId}_${cleanEmail}`, JSON.stringify(savedRsvp));
+                }
+
+                location.reload();
+            };
+
+            goingBtn.addEventListener('click', () => submitStatus('Going'));
+            notGoingBtn.addEventListener('click', () => submitStatus('Not Going'));
+        }
+
+        /**
+         * Formats full name to "Firstname LastInitial" (e.g. "Armin Pressler" -> "Armin P")
+         * @param {string} rawName - Full name string
+         * @returns {string} Formatted name
+         */
+        function formatDisplayName(rawName) {
+            if (!rawName || typeof rawName !== 'string') return 'Overland Member';
+            const parts = rawName.trim().split(/\s+/);
+            if (parts.length === 1) {
+                return parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
+            }
+            const firstName = parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
+            const lastInitial = parts[parts.length - 1].charAt(0).toUpperCase();
+            return `${firstName} ${lastInitial}`;
+        }
+
+        /**
+         * Escape HTML string helper to prevent XSS.
+         * @param {string} str - Raw string
+         * @returns {string} Escaped HTML string
+         */
+        function escapeHtml(str) {
+            return String(str || '').replace(/[&<>"']/g, function (m) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m];
+            });
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+title: Voluntary Acknowledgment of Risk and Group Trip Agreement - Overland East Bay
+description: Voluntary Acknowledgment of Risk and Group Trip Agreement for Overland East Bay trips.
+pagetype: content
+build: prompts/build content page.md
+comments: "agent change 2026-07-08 - Created Voluntary Acknowledgment of Risk and Group Trip Agreement page"
+hero:
+  background: 
+  title: Group Trip Agreement
+  subtitle: Voluntary Acknowledgment of Risk and Group Trip Agreement
+meta:
+  source_file: public/admin/group-trip-agreement.html
+  refresh_date: 2026-07-08
+-->
+
+<head>
+    <!-- Gemini: changed 2026-07-08 - created group-trip-agreement page -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voluntary Acknowledgment of Risk and Group Trip Agreement - Overland East Bay</title>
+    <meta name="description"
+        content="Voluntary Acknowledgment of Risk and Group Trip Agreement for Overland East Bay trips.">
+
+    <!-- # Section Card Info
+    ## Text Section
+    slug: group-trip-agreement
+    title: # Group Trip Agreement
+    text: Voluntary Acknowledgment of Risk and Group Trip Agreement for Overland East Bay trips.
+    button: [Read more](admin/group-trip-agreement.html)
+
+    ## Image Section
+    image: 
+    -->
+
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="stylesheet" href="/css/style.css?v=20260903171600">
+    <link rel="stylesheet" href="/css/hero.css?v=20260712032000">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <!-- Cloudflare Web Analytics -->
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js'
+        data-cf-beacon='{"token": "933e079b3a424ffc98c6ce8278414d20"}'></script><!-- End Cloudflare Web Analytics -->
+</head>
+
+<body data-pagefind-ignore>
+    <header>
+        <script src="/js/nav.js?v=20260903172000"></script>
+    </header>
+
+    <div class="hero" style="background-image: url('/images/group-trip-agreement.card.png');">
+        <div class="hero-content">
+            <h1 class="hero-title">Group Trip Agreement</h1>
+            <p class="hero-subtitle">
+                Voluntary Acknowledgment of Risk and Group Trip Agreement
+            </p>
+        </div>
+    </div>
+
+    <main class="content-container">
+
+        <div class="no-print">
+            <p>To make sure we are all on the same page and stay safe out there in the backcountry, we need everyone to
+                check out two documents before we head out.</p>
+
+            <p>1️⃣ <strong>The Trip Agreement & Waiver:</strong> This lays out our basic trail rules—like the "fix your
+                own rig" policy, spotting liability, and handling recovery or emergency costs if something crazy
+                happens.
+                Please carefully review it and sign it digitally below </p>
+
+            <p>2️⃣ <strong>Confidential Medical & Emergency Info:</strong> Since we will be far out of cell service, we
+                want
+                to make sure first responders have what they need if there's a medical emergency. This part is
+                completely
+                private. Please print it out, fill it out, and keep it in a <strong>sealed envelope inside your vehicle
+                    glovebox</strong>
+                (with your name on the envelope). Trip organizers do not collect these envelopes—they are kept securely
+                in
+                your rig for emergency access only. <a href="confidential-medical-info.html"
+                    style="color: #60a5fa; font-weight: 600;">View & Download Medical Info Form →</a></p>
+
+            <!-- Gemini: changed 2026-07-29 - Added link to Trip Leader & Participant Guidelines -->
+            <p>3️⃣ <strong>Trip Leader & Participant Guidelines:</strong> Review how our backcountry trips are organized and expectations for trip leaders and participants. <a href="trip-leader-guidelines.html" style="color: #60a5fa; font-weight: 600;">View Trip Guidelines →</a></p>
+
+            <p>Now that this is out of the way, let’s get ready to hit the dirt! 🛞🔥</p>
+
+            <hr>
+        </div>
+
+        <!-- Gemini: changed 2026-08-23 - Added dynamic trip context banner container -->
+        <div id="ebo-trip-context-banner"></div>
+
+        <div id="ebo-printable-agreement">
+            <h1> TRIP AGREEMENT & WAIVER</h1>
+
+            <section class="callout-danger">
+                <h3>🛑 IMPORTANT NOTICE</h3>
+                <p><strong>BY SIGNING OR AGREEING TO THIS DOCUMENT, YOU ARE WAIVING CERTAIN LEGAL RIGHTS, INCLUDING THE
+                        RIGHT TO SUE YOUR FRIENDS AND TRIP MATES FOR INJURIES OR DAMAGES SUSTAINED DURING ANY OUTINGS.
+                        PLEASE READ CAREFULLY BEFORE AGREEING.</strong></p>
+            </section>
+
+            <div class="download-container text-center"
+                style="margin-bottom: 2rem; display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+                <button class="btn btn-download-pdf">
+                    📥 Download Print-Ready PDF
+                </button>
+                <button class="btn btn-primary btn-sign-agreement" onclick="openAgreementModal()">
+                    ✍️ Sign Digital Agreement
+                </button>
+            </div>
+
+            <section class="callout-info"
+                style="border-left: 4px solid var(--accent-gold); background-color: var(--card-bg-light);">
+                <p><strong>Document Version:</strong> Version v0.2 — 2026-07-28</p>
+                <p><strong>Document Hash (SHA-256):</strong> <code id="agreement-hash-display"
+                        style="font-family: monospace; background: rgba(15, 23, 42, 0.5); padding: 0.2rem 0.4rem; border-radius: 4px; color: #60a5fa;"
+                        title="Computing agreement SHA-256 hash...">Computing...</code></p>
+                <p><strong>EVERGREEN AGREEMENT PERIOD:</strong> This Agreement covers all Overland East Bay group trips,
+                    meetups, and off-road events I participate in during the twelve (12) months following signature.</p>
+                <p><strong>WITHDRAWAL / OPT-OUT:</strong> This agreement automatically expires at the end of the Term and does not apply retroactively.</p>
+            </section>
+
+            <!-- Gemini: changed 2026-07-29 - Updated to Version v0.2 agreement text -->
+            <div id="ebo-agreement-text">
+                <p>This Agreement is between the undersigned participant ("Participant," "I," "me") and the Released Parties defined below, in consideration for being permitted to participate in Overland East Bay trips, meetups, campouts, road runs, and off-road events ("Activities"). If I also sign Section 9, this Agreement additionally covers the minor child(ren) I identify there.</p>
+
+                <hr>
+
+                <h2>1. Released Parties; Term</h2>
+                <p>"Released Parties" means Overland East Bay and its organizers, including Armin Pressler; each designated trip leader, volunteer trail guide, spotter, recovery assistant, and communications volunteer; each other participating driver and passenger; and their respective agents, representatives, heirs, and personal representatives — each an intended third-party beneficiary of this Agreement. This Agreement does not cover Overland Bound or any other outside organization absent separate written authorization. It applies to the trip identified on any Trip-Specific Acknowledgment and to all other Activities in which I (and any minor child identified in Section 9) participate during the twelve (12) months following the date of signature (the "Term"); it automatically expires at the end of the Term and does not apply retroactively.</p>
+
+                <hr>
+
+                <h2>2. Acknowledgment of Inherent Risks</h2>
+                <p>Overlanding, off-road travel, remote camping, vehicle recovery, spotting, and group convoy travel are inherently dangerous. I voluntarily participate (and, if Section 9 applies, permit my minor child(ren) to participate) with full knowledge of risks including, without limitation: rough, unpredictable, rugged terrain, steep inclines, drop-offs, washed-out roads, mud, sand, snow, and ice; vehicle collisions, rollovers, instability, mechanical failure, and tire blowouts; water crossings and flash floods; dust and impaired visibility; reliance on maps, GPS, or navigation that may be wrong or outdated; vehicle movement during spotting or recovery; winch-line, tow-strap, kinetic-rope, shackle, or recovery-point failure and stored-energy hazards; improper or inaccurate spotting instructions; crushing, entrapment, or other recovery-related injury; extreme weather, wildfire, falling rocks or trees, hazardous wildlife or insects, altitude, heat or cold exposure, dehydration, and illness in a remote location; fuel, batteries, propane, generators, cooking equipment, and related fire or burn hazards; little to no cellular or radio service; significantly delayed towing, recovery, medical, or emergency response; and the acts, decisions, errors, or omissions of other participants. I explicitly assume all such risks, known and unknown, including the risk of property damage, severe personal injury, or death.</p>
+
+                <hr>
+
+                <h2>3. Release, Waiver of Claims, and Covenant Not to Sue</h2>
+                <p>In consideration for being permitted to participate, I, for myself and my heirs, executors, administrators, and assigns, release, waive, and discharge the Released Parties from — and covenant not to sue for — any claim for bodily injury, illness, death, emotional distress, medical or evacuation expenses, property damage, or other loss arising from my participation and caused by a Released Party's ordinary negligence, including in route selection, trip planning, directions, convoy management, warnings, trail information, spotting, recovery, communications, emergency decisions, voluntary assistance, or the acts or omissions of other participants.</p>
+                <p><strong>This release and covenant do NOT apply to, and I am NOT releasing, gross negligence, recklessness, willful or wanton misconduct, intentional misconduct, fraud, or any claim that cannot lawfully be released under applicable law.</strong></p>
+
+                <hr>
+
+                <h2>4. Independent Decisions; No Duty to Rescue; No Guarantee</h2>
+                <p>I alone decide whether to attempt any obstacle, follow any route, continue under changing conditions, accept assistance, follow a spotter (suggestions only — I retain full vehicle control), participate in a recovery, or turn around or leave the group. No organizer, participant, spotter, or volunteer has any duty to provide towing, recovery, navigation, mechanical assistance, first aid, transportation, evacuation, or rescue; any assistance is a purely voluntary courtesy that may be refused or stopped at any time. The Released Parties do not guarantee trail conditions, weather, route legality, vehicle suitability, driver skill, recovery success, navigation accuracy, or availability of emergency services, and are not acting as professional guides, mechanics, recovery operators, or medical providers.</p>
+
+                <hr>
+
+                <h2>5. Vehicles, Equipment, and Costs</h2>
+                <p>I am solely financially responsible for my own vehicle, equipment, and belongings, and release the Released Parties from liability for property damage arising from a Released Party's ordinary negligence while spotting, guiding, or assisting me (subject to Section 3's carve-outs). No one is required to operate another participant's vehicle; if I do, or allow another to drive mine, the owner and driver alone must confirm licensing, qualification, and insurance — the Released Parties do not verify or guarantee coverage. Remote recovery, towing, and medical evacuation can be very expensive; I am solely responsible for all such costs, and nothing here requires any Released Party to attempt or complete a recovery or rescue.</p>
+
+                <hr>
+
+                <h2>6. Emergency Medical Authorization</h2>
+                <p>If I, or a minor child identified in Section 9, suffer a medical emergency and cannot communicate, I authorize the Released Parties, at their discretion and without obligation, to seek emergency treatment, contact Search and Rescue, or arrange evacuation, and I am solely responsible for the resulting costs. Overland East Bay does not collect, store, or maintain medical information; any emergency-information card stays in the participant's own possession, per the separate Voluntary Emergency Information Card.</p>
+
+                <hr>
+
+                <h2>7. Participant Representations</h2>
+                <p>I represent that I hold a valid driver's license and adequate insurance; am physically and mentally capable and not impaired by alcohol, cannabis, drugs, fatigue, or medication; will comply with applicable traffic, fire, land-use, and environmental rules; am responsible for inspecting/maintaining my vehicle and using proper seat belts, restraints, and recovery equipment; will disclose relevant limitations before accepting assistance; am responsible for my passengers, minor children, animals, equipment, and property; and may withdraw from any activity I consider unsafe. The Released Parties do not inspect, certify, or guarantee any of the foregoing.</p>
+
+                <hr>
+
+                <h2>8. Indemnification; General Provisions</h2>
+                <p>I agree to defend, indemnify, and hold harmless the Released Parties against any third-party claim arising from my own negligent, reckless, intentional, or unlawful conduct (excluding a Released Party's own gross negligence, recklessness, intentional misconduct, or unlawful conduct). This Agreement creates no partnership, joint venture, employment, or agency relationship among participants or organizers; together with any Trip-Specific Acknowledgment it is the entire agreement between me and the Released Parties; it is governed by California law regardless of where an Activity occurs, to the extent enforceable in the state where an incident occurs; and any unenforceable provision does not affect the rest.</p>
+
+                <hr>
+
+                <h2>9. Minor Participant Coverage (Parent/Guardian Terms)</h2>
+                <p>If I am the parent or legal guardian of a minor child who will accompany or participate in Activities with me, I complete this Section on the minor's behalf, in lieu of a separate Minor Participant and Parent/Guardian Agreement, and represent that I have full legal authority to do so. The risks in Section 2, the release and covenant not to sue in Section 3 (with its carve-outs), the no-duty-to-rescue and no-guarantee terms of Section 4, and the emergency authorization in Section 6 apply equally to each minor child listed below, and I release, waive, and covenant not to sue on behalf of that child and myself to the same extent as Section 3. I likewise agree to defend, indemnify, and hold harmless the Released Parties, on the same terms as Section 8, for any third-party claim arising from that child's negligent, reckless, intentional, or unlawful conduct. Supervision of each listed minor is my responsibility, or that of the Supervising Adult named below — not any Released Party's — and a minor may not operate a vehicle unless independently licensed, insured, and authorized. I understand a parent's release of a minor's own future claims can depend on the specific facts and state involved.</p>
+
+                <p><strong>Minor Child Name / DOB:</strong> ____________________________________________</p>
+                <p><strong>Minor Child Name / DOB (if more than one):</strong> ____________________________________________</p>
+                <p><strong>Supervising Adult During Activity (if other than signer):</strong> ____________________________________________</p>
+                <p><strong>Parent/Guardian Signature (on behalf of minor child(ren) above):</strong> ____________________________________________</p>
+
+                <hr>
+
+                <p><strong>I HAVE READ THIS AGREEMENT CAREFULLY, AM AT LEAST 18, AND UNDERSTAND I AM GIVING UP SUBSTANTIAL LEGAL RIGHTS — INCLUDING THE RIGHT TO SUE FOR ORDINARY-NEGLIGENCE INJURIES — FOR MYSELF AND, IF SECTION 9 IS COMPLETED, FOR MY MINOR CHILD(REN). I SIGN VOLUNTARILY AND WITHOUT INDUCEMENT.</strong></p>
+
+                <p><strong>Print Name:</strong> ____________________________________________</p>
+                <p><strong>Signature:</strong> ____________________________________________</p>
+                <p><strong>Date:</strong> ____________________</p>
+                <p><strong>Trip / Annual Period Covered:</strong> ____________________________________________</p>
+
+                <p><em>If executed electronically: By checking the box and selecting "Accept and Submit," I electronically sign this Agreement (including Section 9, if completed) and agree to be legally bound by it.</em> ☐ <em>I accept and sign electronically.</em></p>
+
+                <hr>
+
+                <p class="text-center" style="font-style: italic; color: #94a3b8; font-size: 0.9rem;">Version v0.2 — 2026-07-28</p>
+            </div>
+
+            <br>
+
+            <p class="text-center" style="font-style: italic; color: #94a3b8; font-size: 0.9rem;">--- end of agreement.
+                ---</p>
+            <hr>
+        </div>
+
+        <div class="no-print">
+            <p>And don't forget to prepare your</p>
+
+            <section class="callout-info" style="margin-top: 2rem;">
+                <h3>📋 Confidential Emergency Medical Profile</h3>
+                <p>For remote backcountry travel without cell service, participants are requested to fill out a
+                    confidential
+                    emergency information profile to place in a sealed envelope or vehicle glovebox. <a
+                        href="confidential-medical-info.html" style="color: #60a5fa; font-weight: 600;">View & Download
+                        Confidential Medical & Emergency Info Form →</a></p>
+            </section>
+        </div>
+
+    </main>
+
+    <footer>
+        <script src="/js/footer.js?v=20260729190500"></script>
+    </footer>
+
+    <!-- Gemini: changed 2026-07-28 - Unified agreement/RSVP modal template script -->
+    <script src="/js/app.js?v=20260729033300"></script>
+    <script src="/js/rsvp_modal_template.js?v=20260729190500"></script>
+    <script src="/js/agreement.js?v=20260729190500"></script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadTurnstileCallback"
+        defer></script>
+</body>
+
+</html>

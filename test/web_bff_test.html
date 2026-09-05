@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- pagetype: test -->
+<!-- Gemini: updated 2026-07-29 - Complete Cloudflare Worker BFF Interactive API Documentation & Test Harness -->
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Interactive API documentation and testing harness for Cloudflare Worker BFF endpoints.">
+    <title>Cloudflare Worker BFF API Explorer | Overland EastBay</title>
+
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="stylesheet" href="/css/hero.css?v=20260728102200">
+    <link rel="stylesheet" href="/css/style.css?v=20260903171600">
+    <style>
+        .api-section {
+            background: var(--card-bg, #1e1e1e);
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color, rgba(255,255,255,0.1));
+            overflow: hidden;
+        }
+
+        .api-section-header {
+            padding: 1.25rem 1.5rem;
+            background: rgba(0, 0, 0, 0.25);
+            border-bottom: 1px solid var(--border-color, rgba(255,255,255,0.1));
+        }
+
+        .api-section-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: var(--accent, #d4a373);
+        }
+
+        .api-section-header p {
+            margin: 0.4rem 0 0;
+            color: rgba(255,255,255,0.7);
+            font-size: 0.95rem;
+        }
+
+        .endpoint-card {
+            padding: 1.75rem;
+            border-bottom: 1px solid var(--border-color, rgba(255,255,255,0.08));
+        }
+
+        .endpoint-card:last-child {
+            border-bottom: none;
+        }
+
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .method-badge {
+            display: inline-block;
+            font-weight: 800;
+            font-size: 0.85rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .method-GET {
+            background: rgba(97, 175, 254, 0.15);
+            color: #61affe;
+            border: 1px solid rgba(97, 175, 254, 0.3);
+        }
+
+        .method-POST {
+            background: rgba(73, 204, 144, 0.15);
+            color: #49cc90;
+            border: 1px solid rgba(73, 204, 144, 0.3);
+        }
+
+        .endpoint-path {
+            font-family: monospace;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .endpoint-desc {
+            margin: 0 0 1.25rem 0;
+            color: rgba(255,255,255,0.8);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .params-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1.25rem;
+            border-radius: 8px;
+            margin-bottom: 1.25rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .param-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .param-label {
+            width: 160px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--accent, #d4a373);
+            flex-shrink: 0;
+        }
+
+        .param-input {
+            flex: 1;
+            min-width: 250px;
+            padding: 0.55rem 0.85rem;
+            background: rgba(15, 15, 15, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 6px;
+            color: #fff;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .param-input:focus {
+            outline: none;
+            border-color: var(--accent, #d4a373);
+            box-shadow: 0 0 0 2px rgba(212, 163, 115, 0.2);
+        }
+
+        .action-bar {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-api {
+            cursor: pointer;
+            padding: 0.55rem 1.25rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-api.primary {
+            background: var(--accent, #d4a373);
+            color: #111;
+        }
+
+        .btn-api.primary:hover {
+            background: #e6b88a;
+        }
+
+        .btn-api.secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-api.secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .console-output {
+            margin-top: 1rem;
+            background: #0d0d0d;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: monospace;
+            font-size: 0.88rem;
+            color: #a9dc76;
+            white-space: pre-wrap;
+            max-height: 350px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .console-output.show {
+            display: block;
+        }
+
+        .status-pill {
+            display: inline-block;
+            font-weight: 700;
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .status-200 { background: rgba(40, 167, 69, 0.2); color: #75b798; border: 1px solid rgba(40, 167, 69, 0.4); }
+        .status-error { background: rgba(220, 53, 69, 0.2); color: #ea868f; border: 1px solid rgba(220, 53, 69, 0.4); }
+    </style>
+    <!-- Cloudflare Web Analytics -->
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js'
+        data-cf-beacon='{"token": "933e079b3a424ffc98c6ce8278414d20"}'></script>
+</head>
+
+<body class="content-layout" data-pagefind-ignore>
+    <header>
+        <script src="/js/nav.js?v=20260903172000"></script>
+    </header>
+
+    <div class="hero" style="background-image: url('/images/index.hero.jpg');">
+        <div class="hero-content">
+            <h1 class="hero-title">BFF API Explorer & Test Harness</h1>
+            <p class="hero-subtitle">Interactive documentation and testing for Cloudflare Worker BFF endpoints</p>
+        </div>
+    </div>
+
+    <main class="content-container mw-800" style="margin: 2rem auto; padding: 0 1rem;">
+
+        <!-- GLOBAL CONFIGURATION -->
+        <div class="api-section">
+            <div class="api-section-header">
+                <h2>BFF Server Settings</h2>
+                <p>Configures target domain endpoint and session credentials for requests.</p>
+            </div>
+            <div class="endpoint-card">
+                <div class="params-container">
+                    <div class="param-row">
+                        <span class="param-label">Target BFF URL</span>
+                        <input type="text" id="bff-base-url" class="param-input" value="https://ebo-signature-bff.armin-pressler.workers.dev">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 1. POST /auth/session -->
+        <div class="api-section" id="auth-session">
+            <div class="api-section-header">
+                <h2>1. Google OAuth Session Creation</h2>
+                <p>Exchanges a verified Google OAuth GSI ID token (JWT) for a 7-day session token and HttpOnly cookie.</p>
+            </div>
+            <div class="endpoint-card">
+                <div class="endpoint-header">
+                    <span class="method-badge method-POST">POST</span>
+                    <span class="endpoint-path">/auth/session</span>
+                </div>
+                <p class="endpoint-desc">Verifies Google ID Token via Google Remote JWKS, registers user profile under <code>profiles/&lt;cleanEmail&gt;.json</code> in GitHub DB, and stores session in Workers KV.</p>
+
+                <div class="params-container">
+                    <div class="param-row">
+                        <span class="param-label">Google JWT Credential</span>
+                        <input type="text" id="param-session-credential" class="param-input" placeholder="Paste Google GSI ID Token JWT string">
+                    </div>
+                </div>
+
+                <div class="action-bar">
+                    <button class="btn-api primary" onclick="runCreateSession()">Execute POST /auth/session</button>
+                    <button class="btn-api secondary" onclick="document.getElementById('nav-auth-btn')?.click()">Sign-in via Google Modal</button>
+                </div>
+                <div id="out-auth-session" class="console-output"></div>
+            </div>
+        </div>
+
+        <!-- 2. GET /auth/me -->
+        <div class="api-section" id="auth-me">
+            <div class="api-section-header">
+                <h2>2. Authenticated Member Profile & Signature Status</h2>
+                <p>Retrieves active user profile and checks GitHub signatures folder for trip agreement signature status.</p>
+            </div>
+            <div class="endpoint-card">
+                <div class="endpoint-header">
+                    <span class="method-badge method-GET">GET</span>
+                    <span class="endpoint-path">/auth/me</span>
+                </div>
+                <p class="endpoint-desc">Validates session cookie or Bearer token header against Workers KV and checks signature status (version, timestamp, hash).</p>
+
+                <div class="action-bar">
+                    <button class="btn-api primary" onclick="runGetMe()">Execute GET /auth/me</button>
+                </div>
+                <div id="out-auth-me" class="console-output"></div>
+            </div>
+        </div>
+
+        <!-- 3. POST /auth/logout -->
+        <div class="api-section" id="auth-logout">
+            <div class="api-section-header">
+                <h2>3. Logout / Session Termination</h2>
+                <p>Terminates user session and clears session cookies.</p>
+            </div>
+            <div class="endpoint-card">
+                <div class="endpoint-header">
+                    <span class="method-badge method-POST">POST</span>
+                    <span class="endpoint-path">/auth/logout</span>
+                </div>
+                <p class="endpoint-desc">Deletes <code>session:&lt;sessionId&gt;</code> from Workers KV and sets <code>Set-Cookie: session=; Max-Age=0</code>.</p>
+
+                <div class="action-bar">
+                    <button class="btn-api primary" onclick="runLogout()">Execute POST /auth/logout</button>
+                </div>
+                <div id="out-auth-logout" class="console-output"></div>
+            </div>
+        </div>
+
+        <!-- 4. POST /signature -->
+        <div class="api-section" id="signature">
+            <div class="api-section-header">
+                <h2>4. Group Trip Agreement Signature Submission</h2>
+                <p>Captures legal waiver signature with Cloudflare Turnstile bot verification.</p>
+            </div>
+            <div class="endpoint-card">
+                <div class="endpoint-header">
+                    <span class="method-badge method-POST">POST</span>
+                    <span class="endpoint-path">/signature</span>
+                </div>
+                <p class="endpoint-desc">Verifies Turnstile token, captures IP/Geo metadata, and commits JSON payload to <code>signatures/&lt;name&gt;-&lt;email&gt;-&lt;date&gt;-&lt;time&gt;.json</code> in GitHub DB.</p>
+
+                <div class="params-container">
+                    <div class="param-row">
+                        <span class="param-label">Full Name</span>
+                        <input type="text" id="sig-name" class="param-input" value="Jane Doe">
+                    </div>
+                    <div class="param-row">
+                        <span class="param-label">Email Address</span>
+                        <input type="text" id="sig-email" class="param-input" value="jane@example.com">
+                    </div>
+                    <div class="param-row">
+                        <span class="param-label">Cell Phone</span>
+                        <input type="text" id="sig-cell" class="param-input" value="510-555-0199">
+                    </div>
+                    <div class="param-row">
+                        <span class="param-label">Emergency Contact</span>
+                        <input type="text" id="sig-contact" class="param-input" value="John Doe (510-555-0100)">
+                    </div>
+                    <div class="param-row">
+                        <span class="param-label">Trip ID (Optional)</span>
+                        <input type="text" id="sig-trip" class="param-input" value="TRIP_2027_04_30_Utah_Pony_Express">
+                    </div>
+                    <div class="param-row">
+                        <span class="param-label">Turnstile Token</span>
+                        <input type="text" id="sig-token" class="param-input" value="mock-turnstile-token">
+                    </div>
+                </div>
+
+                <div class="action-bar">
+                    <button class="btn-api primary" onclick="runSubmitSignature()">Execute POST /signature</button>
+                </div>
+                <div id="out-signature" class="console-output"></div>
+            </div>
+        </div>
+
+        <!-- 5. GET /rsvp -->
+        <div class="api-section" id="rsvp-get">
+            <div class="api-section-header">
+                <h2>5. Trip Participant Roster (GET /rsvp)</h2>
+                <p>Retrieves confirmed participant roster for a trip with strict email privacy protection.</p>
+            </div>
+            <div class="endpoint-card">
+                <div class="endpoint-header">
+                    <span class="method-badge method-GET">GET</span>
+                    <span class="endpoint-path">/rsvp?tripId=&lt;tripId&gt;</span>
+                </div>
+                <p class="endpoint-desc">Parallel fetches all RSVP records from <code>RSVPs/&lt;tripId&gt;/</code> in GitHub DB. Omits email addresses to protect privacy.</p>
+
+                <div class="params-container">
+                    <div class="param-row">
+                        <span class="param-label">Trip ID</span>
+                        <input type="text" id="rsvp-get-trip" class="param-input" value="TRIP_2027_04_30_Utah_Pony_Express">
+                    </div>
+                </div>
+
+                <div class="action-bar">
+                    <button class="btn-api primary" onclick="runGetRsvps()">Execute GET /rsvp</button>
+                </div>
+                <div id="out-rsvp-get" class="console-output"></div>
+            </div>
+        </div>
+
+        <!-- 6. POST /rsvp -->
+        <div class="api-section" id="rsvp-post">
+            <div class="api-section-header">
+                <h2>6. Submit Trip RSVP & Signature (POST /rsvp)</h2>
+                <p>Saves member RSVP and automatically commits trip agreement signature record to GitHub database.</p>
+            </div>
+            <div class="endpoint-card">
+                <div class="endpoint-header">
+                    <span class="method-badge method-POST">POST</span>
+                    <span class="endpoint-path">/rsvp</span>
+                </div>
+                <p class="endpoint-desc">Commits RSVP status to <code>RSVPs/&lt;trip_id&gt;/&lt;cleanEmail&gt;.json</code> and creates signature record under <code>signatures/</code>.</p>
+
+                <div class="params-container">
+                    <div class="param-row">
+                        <span class="param-label">Trip ID</span>
+                        <input type="text" id="rsvp-post-trip" class="param-input" value="TRIP_2027_04_30_Utah_Pony_Express">
+                    </div>
+                    <div class="param-row">
+                        <span class="param-label">RSVP Status</span>
+                        <input type="text" id="rsvp-post-status" class="param-input" value="Going">
+                    </div>
+                    <div class="param-row">
+                        <span class="param-label">Member Name</span>
+                        <input type="text" id="rsvp-post-name" class="param-input" value="Jane Doe">
+                    </div>
+                    <div class="param-row">
+                        <span class="param-label">Member Email</span>
+                        <input type="text" id="rsvp-post-email" class="param-input" value="jane@example.com">
+                    </div>
+                </div>
+
+                <div class="action-bar">
+                    <button class="btn-api primary" onclick="runSaveRsvp()">Execute POST /rsvp</button>
+                </div>
+                <div id="out-rsvp-post" class="console-output"></div>
+            </div>
+        </div>
+
+        <!-- 7. GET /trip -->
+        <div class="api-section" id="trip-get">
+            <div class="api-section-header">
+                <h2>7. Trip Directory List (GET /trip)</h2>
+                <p>Retrieves list of trip directories available in the GitHub RSVPs database folder.</p>
+            </div>
+            <div class="endpoint-card">
+                <div class="endpoint-header">
+                    <span class="method-badge method-GET">GET</span>
+                    <span class="endpoint-path">/trip</span>
+                </div>
+                <p class="endpoint-desc">Fetches all trip directories from <code>RSVPs/</code> folder in GitHub repository database.</p>
+
+                <div class="action-bar">
+                    <button class="btn-api primary" onclick="runGetTrips()">Execute GET /trip</button>
+                </div>
+                <div id="out-trip-get" class="console-output"></div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer>
+        <script src="/js/footer.js?v=20260729190500"></script>
+    </footer>
+
+    <script>
+        function getBaseUrl() {
+            return document.getElementById('bff-base-url').value.trim().replace(/\/$/, '');
+        }
+
+        function getAuthHeaders() {
+            const token = localStorage.getItem('ebo_session_token');
+            const headers = { 'Content-Type': 'application/json' };
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+            }
+            return headers;
+        }
+
+        function renderConsole(elementId, status, data) {
+            const el = document.getElementById(elementId);
+            el.classList.add('show');
+            const isOk = status >= 200 && status < 300;
+            const statusHTML = `<span class="status-pill ${isOk ? 'status-200' : 'status-error'}">HTTP ${status}</span>\n`;
+            el.innerHTML = statusHTML + escapeHtml(JSON.stringify(data, null, 2));
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        async function runCreateSession() {
+            const credential = document.getElementById('param-session-credential').value.trim();
+            const baseUrl = getBaseUrl();
+            try {
+                const res = await fetch(`${baseUrl}/auth/session`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ credential })
+                });
+                const data = await res.json();
+                if (data.token) {
+                    localStorage.setItem('ebo_session_token', data.token);
+                }
+                renderConsole('out-auth-session', res.status, data);
+            } catch (err) {
+                renderConsole('out-auth-session', 500, { error: err.message });
+            }
+        }
+
+        async function runGetMe() {
+            const baseUrl = getBaseUrl();
+            try {
+                const res = await fetch(`${baseUrl}/auth/me`, {
+                    headers: getAuthHeaders(),
+                    credentials: 'include'
+                });
+                const data = await res.json();
+                renderConsole('out-auth-me', res.status, data);
+            } catch (err) {
+                renderConsole('out-auth-me', 500, { error: err.message });
+            }
+        }
+
+        async function runLogout() {
+            const baseUrl = getBaseUrl();
+            try {
+                const res = await fetch(`${baseUrl}/auth/logout`, {
+                    method: 'POST',
+                    headers: getAuthHeaders(),
+                    credentials: 'include'
+                });
+                const data = await res.json();
+                localStorage.removeItem('ebo_session_token');
+                renderConsole('out-auth-logout', res.status, data);
+            } catch (err) {
+                renderConsole('out-auth-logout', 500, { error: err.message });
+            }
+        }
+
+        async function runSubmitSignature() {
+            const baseUrl = getBaseUrl();
+            const payload = {
+                name: document.getElementById('sig-name').value,
+                email: document.getElementById('sig-email').value,
+                cell: document.getElementById('sig-cell').value,
+                emergency_contact: document.getElementById('sig-contact').value,
+                trip_id: document.getElementById('sig-trip').value,
+                token: document.getElementById('sig-token').value
+            };
+            try {
+                const res = await fetch(`${baseUrl}/signature`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                renderConsole('out-signature', res.status, data);
+            } catch (err) {
+                renderConsole('out-signature', 500, { error: err.message });
+            }
+        }
+
+        async function runGetRsvps() {
+            const baseUrl = getBaseUrl();
+            const tripId = document.getElementById('rsvp-get-trip').value.trim();
+            try {
+                const res = await fetch(`${baseUrl}/rsvp?tripId=${encodeURIComponent(tripId)}`);
+                const data = await res.json();
+                renderConsole('out-rsvp-get', res.status, data);
+            } catch (err) {
+                renderConsole('out-rsvp-get', 500, { error: err.message });
+            }
+        }
+
+        async function runSaveRsvp() {
+            const baseUrl = getBaseUrl();
+            const payload = {
+                is_test: true,
+                trip_id: document.getElementById('rsvp-post-trip').value,
+                status: document.getElementById('rsvp-post-status').value,
+                name: document.getElementById('rsvp-post-name').value,
+                email: document.getElementById('rsvp-post-email').value
+            };
+            try {
+                const res = await fetch(`${baseUrl}/rsvp`, {
+                    method: 'POST',
+                    headers: getAuthHeaders(),
+                    credentials: 'include',
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                renderConsole('out-rsvp-post', res.status, data);
+            } catch (err) {
+                renderConsole('out-rsvp-post', 500, { error: err.message });
+            }
+        }
+
+        async function runGetTrips() {
+            const baseUrl = getBaseUrl();
+            try {
+                const res = await fetch(`${baseUrl}/trip`);
+                const data = await res.json();
+                renderConsole('out-trip-get', res.status, data);
+            } catch (err) {
+                renderConsole('out-trip-get', 500, { error: err.message });
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,275 @@
+/* Gemini: created 2026-07-28 - CSS styling for new RSVP Module and Trip Participants Table */
+
+.ebo-rsvp-module-container {
+    margin: 2rem 0;
+    padding: 1.75rem;
+    background: var(--card-bg, #1e293b);
+    border: 1px solid var(--border-color, #334155);
+    border-radius: var(--radius-lg, 12px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    color: var(--text-main, #f8fafc);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ebo-rsvp-module-container:hover {
+    box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.4);
+}
+
+.ebo-rsvp-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.ebo-rsvp-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--heading-color, #ffffff);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.ebo-rsvp-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 0.75rem 1.75rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: var(--radius-md, 8px);
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(43, 147, 72, 0.25);
+}
+
+.ebo-rsvp-btn-action {
+    background: linear-gradient(135deg, #2b9348 0%, #15803d 100%);
+    color: #ffffff;
+}
+
+.ebo-rsvp-btn-action:hover {
+    background: linear-gradient(135deg, #34a053 0%, #166534 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(43, 147, 72, 0.4);
+}
+
+.ebo-rsvp-btn-auth {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+.ebo-rsvp-btn-auth:hover {
+    background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+}
+
+/* Agreement Modal Styling */
+.ebo-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 1rem;
+}
+
+.ebo-modal-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 16px;
+    max-width: 580px;
+    width: 100%;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+    animation: eboModalPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    color: #f8fafc;
+    overflow: hidden;
+}
+
+@keyframes eboModalPop {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.ebo-modal-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #334155;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #0f172a;
+}
+
+.ebo-modal-header h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #ffffff;
+}
+
+.ebo-modal-close {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+    transition: color 0.15s, background 0.15s;
+}
+
+.ebo-modal-close:hover {
+    color: #ffffff;
+    background: #334155;
+}
+
+.ebo-modal-body {
+    padding: 1.5rem;
+    overflow-y: auto;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #cbd5e1;
+}
+
+.ebo-modal-footer {
+    padding: 1.25rem 1.5rem;
+    border-top: 1px solid #334155;
+    background: #0f172a;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+/* Participants Table Styling */
+.ebo-participants-container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.ebo-participants-table-wrapper {
+    overflow-x: auto;
+    background: #1e293b;
+    border-radius: 12px;
+    border: 1px solid #334155;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+}
+
+.ebo-participants-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.ebo-participants-table th {
+    background: #0f172a;
+    color: #94a3b8;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #334155;
+}
+
+.ebo-participants-table td {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #334155;
+    vertical-align: middle;
+    color: #f8fafc;
+}
+
+.ebo-participants-table tr:last-child td {
+    border-bottom: none;
+}
+
+.ebo-participant-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+}
+
+.ebo-participant-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #2b9348;
+    background-color: #334155;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: #ffffff;
+    font-size: 1rem;
+}
+
+.ebo-status-badge-going {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.8rem;
+    background: rgba(43, 147, 72, 0.15);
+    color: #4ade80;
+    border: 1px solid rgba(74, 222, 128, 0.3);
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+/* Gemini: changed 2026-07-28 - Added status badge for Not Going and participants counter pill */
+.ebo-status-badge-notgoing {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.8rem;
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    border: 1px solid rgba(248, 113, 113, 0.3);
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.ebo-participants-counter {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 1rem;
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: #cbd5e1;
+    margin-top: 0.5rem;
+}
+
+.ebo-counter-going {
+    color: #4ade80;
+    font-weight: 700;
+}
+
+.ebo-counter-notgoing {
+    color: #f87171;
+    font-weight: 600;
+}
