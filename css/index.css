@@ -1,0 +1,38 @@
+.hero-index {
+    height: 60vh;
+}
+
+.hero-index::before {
+    /* background: rgba(255, 255, 255, 0); */
+    background: linear-gradient(to bottom, transparent 70%, #fdfaf6);
+}
+
+.hero-index::after {
+    background: linear-gradient(to bottom, transparent 70%, #fdfaf6);
+}
+
+.hero-index-content {
+    color: var(--bg-color-secondary);
+}
+
+/* Gemini: changed 2025-12-22 - Changed to accent color for visual impact */
+.hero-index h1 {
+    color: var(--bg-color-secondary);
+    font-size: 2rem;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+}
+
+/* Gemini: changed 2025-12-22 - Applied script font for elegant styling */
+.hero-index p {
+    font-family: 'Caveat', cursive;
+    font-size: 2rem;
+    color: var(--bg-color-secondary);
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.3);
+    font-weight: 600;
+}
+
+/* Gemini: changed 2025-12-30 - Moved from style.css */
+/* --- Community Section --- */
+#community {
+    scroll-margin-top: 120px;
+}

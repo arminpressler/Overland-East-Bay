@@ -1,0 +1,283 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Inter:wght@400;500;700;800&display=swap');
+
+/* Gemini: created 2025-12-20 - Custom styles for index2.html inspired by b-egg.farm */
+
+
+body.index-layout {
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+}
+
+.script-font {
+    font-family: 'Caveat', cursive;
+    font-size: 1.8rem;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+/* Grid Layout for Home */
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.feature-card {
+    background-color: var(--card-bg);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--accent);
+}
+
+.feature-card h3 {
+    color: var(--accent);
+}
+
+/* Announcement Section */
+.announcements-section {
+    max-width: var(--container-width);
+    margin: 0 auto var(--spacing-lg) auto;
+    padding: 0 var(--spacing-lg);
+}
+
+.announcement-banner {
+    background: linear-gradient(135deg, #2d2d2d 0%, #363636 100%);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-lg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-lg);
+    flex-wrap: wrap;
+    box-shadow: 0 4px 12px rgba(212, 163, 115, 0.15);
+}
+
+.announcement-content h3 {
+    margin-bottom: var(--spacing-sm);
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.announcement-content p {
+    margin-bottom: 0;
+    color: var(--text-main);
+}
+
+
+/* Section Transitions */
+.section-card {
+    padding: 6rem 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.section-card-white {
+    background: linear-gradient(135deg, #fdfaf6 0%, #f7f1e6 100%);
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.section-card-white .impact-text {
+    color: var(--text-dark);
+}
+
+.section-card-dark {
+    background: var(--bg-color-secondary);
+    background-color: var(--bg-color-secondary);
+    color: white;
+}
+
+.section-card-dark h2,
+.section-card-dark p {
+    color: white;
+}
+
+.section-card-dark .btn-secondary {
+    border-color: rgba(255, 255, 255, 0.3);
+    color: white;
+}
+
+.section-card-dark .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* CTA Sections */
+.section-card-cta {
+    text-align: center;
+}
+
+
+/* Section Styles */
+.section-card-slant-top {
+    margin-top: 5rem;
+    padding-top: 8rem;
+    -webkit-clip-path: polygon(0 15%, 100% 0, 100% 100%, 0 100%);
+    clip-path: polygon(0 15%, 100% 0, 100% 100%, 0 100%);
+}
+
+/* Floating Pill Positioning */
+.pill-dv-date {
+    top: -20px;
+    right: 20px;
+}
+
+.pill-dv-status {
+    bottom: 20px;
+    left: -20px;
+}
+
+.pill-meetup-next {
+    top: 10%;
+    left: -5%;
+    animation-delay: 1s;
+}
+
+.pill-trip-next {
+    top: 10%;
+    right: -5%;
+    animation-delay: 1.5s;
+}
+
+.pill-nav-build {
+    top: 10%;
+    left: 10%;
+    animation-delay: 1s;
+}
+
+.pill-nav-map {
+    bottom: 15%;
+    right: 5%;
+    animation-delay: 2s;
+}
+
+.pill-1 {
+    top: 10%;
+    left: -5%;
+}
+
+.pill-2 {
+    bottom: 10%;
+    right: -5%;
+}
+
+/* Content Layouts */
+.section-card-split {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xl);
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 var(--spacing-lg);
+}
+
+.container {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 var(--spacing-lg);
+}
+
+.section-card-split.image_left {
+    flex-direction: row-reverse;
+}
+
+.section-card-split .content-side {
+    flex: 1;
+}
+
+.section-card-split .image-side {
+    flex: 1;
+    position: relative;
+}
+
+.image-side img {
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    transition: transform var(--transition-speed) ease;
+}
+
+.image-side:hover img {
+    transform: scale(1.02);
+}
+
+/* Floating Elements */
+.floating-pill {
+    position: absolute;
+    background: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 50px;
+    box-shadow: var(--shadow-sm);
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-dark);
+    /* Ensure text is visible on white background */
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    z-index: 2;
+    animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* Large Impact Typography */
+.impact-text {
+    font-size: 4rem;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    margin-bottom: var(--spacing-lg);
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+    .index-layout .nav-links {
+        gap: var(--spacing-sm);
+        font-size: 1.0rem;
+    }
+
+    .index-layout .hero-content {
+        margin: 0;
+        padding: 0;
+    }
+
+    .section-card-split,
+    .section-card-split.image_left {
+        flex-direction: column;
+        gap: var(--spacing-lg);
+        padding: 0 var(--spacing-lg);
+    }
+
+    .impact-text {
+        font-size: 2.2rem;
+    }
+
+    .section-card-cta {
+        padding: 4rem var(--spacing-lg);
+    }
+}
+
+
+/* Gemini: created 2025-12-22 - Override gradient fade for index-layout pages to use light background */
+.index-layout .hero::after {
+    background: linear-gradient(to bottom, rgba(253, 250, 246, 0) 0%, rgba(253, 250, 246, 0.3) 50%, rgba(253, 250, 246, 0.9) 100%);
+}
