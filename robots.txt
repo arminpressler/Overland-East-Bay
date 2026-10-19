@@ -1,0 +1,6 @@
+# Gemini: changed 2025-12-20 added robots.txt for crawlers
+User-agent: *
+Allow: /
+Disallow: /test/
+
+Sitemap: https://www.overland-eastbay.com/sitemap.xml
