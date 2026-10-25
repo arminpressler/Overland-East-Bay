@@ -1,0 +1,9 @@
+/* Email Button Module Styles */
+
+/* 
+   Trigger Button - specific overrides if needed.
+   Base styling is handled by global .btn class.
+*/
+.email-invite-trigger {
+    margin-top: 10px;
+}

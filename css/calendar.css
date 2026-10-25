@@ -1,0 +1,103 @@
+/* --- Calendar Page Specifics --- */
+
+.calendar-qtr {
+    color: var(--accent);
+    margin-top: var(--spacing-xl);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: var(--spacing-sm);
+}
+
+.calendar-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.calendar-item {
+    background-color: rgba(255, 255, 255, 0.03);
+    padding: var(--spacing-md);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius-sm);
+    transition: transform 0.2s ease;
+}
+
+.calendar-item:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    transform: translateX(4px);
+}
+
+.calendar-date {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-bottom: 0.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.calendar-desc {
+    color: var(--text-main);
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .calendar-list {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+}
+@media print {
+    /* Hide non-essentials */
+    header, footer, .hero, .nav, .callout-info, .meta, script {
+        display: none !important;
+    }
+
+    /* Reset Body */
+    body {
+        background: white;
+        color: black;
+        font-size: 11pt;
+    }
+
+    /* Compact Layout */
+    .calendar-qtr {
+        margin-top: 1rem;
+        margin-bottom: 0.5rem;
+        font-size: 1.2rem;
+        border-bottom: 2px solid #000;
+        page-break-after: avoid; /* Keep header with content */
+        color: #000;
+    }
+
+    .calendar-list {
+        display: block;
+        gap: 0;
+        margin: 0;
+    }
+
+    .calendar-item {
+        display: flex;
+        flex-direction: row;
+        border: none;
+        background: none;
+        padding: 0.2rem 0;
+        margin: 0;
+        border-bottom: 1px solid #ddd;
+        page-break-inside: avoid;
+        color: #000;
+    }
+    
+    .calendar-date {
+        width: 140px;
+        flex-shrink: 0;
+        font-weight: bold;
+        color: #000;
+    }
+
+    .calendar-desc {
+        color: #000;
+        font-weight: normal;
+    }
+}
