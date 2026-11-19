@@ -1,0 +1,18 @@
+{
+    "apiHost": "http://localhost:8081",
+    "signatureEndpoint": "https://ebo-signature-bff.armin-pressler.workers.dev/signature",
+    "endpoints": {
+        "members": "/members",
+        "membersSearch": "/members/search",
+        "membersMe": "/members/me",
+        "trips": "/trips",
+        "tripsDrafts": "/trips/drafts"
+    },
+    "headers": {
+        "debugSubject": "dev|armin"
+    },
+    "defaultMember": {
+        "displayName": "Armin",
+        "email": "armin.pressler@gmail.com"
+    }
+}

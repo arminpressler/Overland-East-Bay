@@ -1,0 +1,476 @@
+/* --- Calendar Page Specifics --- */
+
+.calendar-qtr {
+    color: var(--accent);
+    margin-top: var(--spacing-xl);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: var(--spacing-sm);
+}
+
+.calendar-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.calendar-item {
+    background-color: rgba(255, 255, 255, 0.03);
+    padding: var(--spacing-md);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius-sm);
+    transition: transform 0.2s ease;
+}
+
+.calendar-item:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    transform: translateX(4px);
+}
+
+.calendar-date {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-bottom: 0.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.calendar-desc {
+    color: var(--text-main);
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .calendar-list {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+}
+
+/* --- Visual Calendar Toolbar & Grids (GH Issue #16) --- */
+.calendar-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin: var(--spacing-lg) 0;
+    padding: 0.85rem 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+}
+
+.calendar-toolbar-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.calendar-toggle-group {
+    display: inline-flex;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 2px;
+    gap: 2px;
+}
+
+.calendar-toggle-group[hidden] {
+    display: none;
+}
+
+.cal-toggle-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    padding: 0.45rem 0.85rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: calc(var(--radius-sm) - 2px);
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.cal-toggle-btn:hover {
+    color: var(--text-main);
+}
+
+.cal-toggle-btn.is-active {
+    background: var(--accent);
+    color: #111;
+}
+
+.calendar-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.cal-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.cal-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.cat-trip { background-color: #10b981; color: #052e16; }
+.cat-meetup { background-color: #f59e0b; color: #1c1000; }
+.cat-volunteer { background-color: #3b82f6; color: #eff6ff; }
+.cat-notice { background-color: #64748b; color: #f8fafc; }
+
+/* Yearly 12 x 4 Grid */
+.cal-yearly-grid {
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.cal-year-header {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+}
+
+.cal-year-header-month {
+    padding: 0.6rem 0.75rem;
+    border-right: 1px solid var(--border-color);
+}
+
+.cal-year-header-weeks {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.cal-year-header-weeks span {
+    padding: 0.6rem 0.5rem;
+    text-align: center;
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.cal-year-header-weeks span:last-child {
+    border-right: none;
+}
+
+.cal-year-header-weeks small {
+    font-weight: 400;
+    opacity: 0.7;
+}
+
+.cal-year-row {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    min-height: 52px;
+}
+
+.cal-year-row:last-child {
+    border-bottom: none;
+}
+
+.cal-year-month-btn {
+    background: rgba(255, 255, 255, 0.02);
+    border: none;
+    border-right: 1px solid var(--border-color);
+    color: var(--text-main);
+    padding: 0.5rem 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.35rem;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-align: left;
+    transition: background 0.15s ease;
+}
+
+.cal-year-month-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--accent);
+}
+
+.cal-ym-year {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.cal-year-weeks {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.cal-year-cells {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    min-height: 52px;
+}
+
+.cal-week-cell {
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 0.35rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    justify-content: center;
+    min-width: 0;
+}
+
+.cal-week-cell:last-child {
+    border-right: none;
+}
+
+.cal-year-bars {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.25rem;
+    padding: 0 0.35rem 0.35rem;
+}
+
+.cal-event-bar {
+    display: block;
+    font-size: 0.76rem;
+    font-weight: 600;
+    padding: 0.22rem 0.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    transition: filter 0.15s ease, transform 0.15s ease;
+}
+
+.cal-event-bar:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+    text-decoration: none;
+}
+
+.cal-event-bar.cat-notice {
+    opacity: 0.75;
+    text-decoration: line-through;
+}
+
+/* Monthly 7-Column Grid */
+.cal-monthly-wrapper {
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.cal-monthly-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.04);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.cal-monthly-title {
+    margin: 0;
+    font-size: 1.2rem;
+    color: var(--accent);
+}
+
+.cal-nav-btn {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    padding: 0.4rem 0.8rem;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.cal-nav-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.cal-monthly-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.cal-month-dow {
+    padding: 0.5rem;
+    text-align: center;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.cal-day-cell {
+    min-height: 86px;
+    padding: 0.35rem;
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+}
+
+.cal-day-cell.is-pad {
+    background: rgba(0, 0, 0, 0.15);
+}
+
+.cal-day-cell.is-today {
+    background: rgba(245, 158, 11, 0.08);
+    box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.cal-day-num {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-muted);
+}
+
+.cal-day-events {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: 0;
+}
+
+/* Detail Strip */
+.cal-detail-bar {
+    margin-top: 0.85rem;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-sm);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.92rem;
+}
+
+.cal-detail-bar.is-empty {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px dashed var(--border-color);
+    color: var(--text-muted);
+}
+
+.cal-detail-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    align-items: center;
+}
+
+.cal-detail-link {
+    font-weight: 700;
+    text-decoration: underline;
+    color: inherit;
+}
+
+@media (max-width: 640px) {
+    .cal-year-header,
+    .cal-year-row {
+        grid-template-columns: 74px 1fr;
+    }
+
+    .cal-year-month-btn {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 0.4rem 0.5rem;
+        gap: 0;
+    }
+
+    .cal-year-header-weeks small {
+        display: none;
+    }
+
+    .cal-day-cell {
+        min-height: 62px;
+        padding: 0.2rem;
+    }
+
+    .cal-event-bar {
+        font-size: 0.68rem;
+        padding: 0.15rem 0.3rem;
+    }
+}
+@media print {
+    /* Hide non-essentials */
+    header, footer, .hero, .nav, .callout-info, .meta, script {
+        display: none !important;
+    }
+
+    /* Reset Body */
+    body {
+        background: white;
+        color: black;
+        font-size: 11pt;
+    }
+
+    /* Compact Layout */
+    .calendar-qtr {
+        margin-top: 1rem;
+        margin-bottom: 0.5rem;
+        font-size: 1.2rem;
+        border-bottom: 2px solid #000;
+        page-break-after: avoid; /* Keep header with content */
+        color: #000;
+    }
+
+    .calendar-list {
+        display: block;
+        gap: 0;
+        margin: 0;
+    }
+
+    .calendar-item {
+        display: flex;
+        flex-direction: row;
+        border: none;
+        background: none;
+        padding: 0.2rem 0;
+        margin: 0;
+        border-bottom: 1px solid #ddd;
+        page-break-inside: avoid;
+        color: #000;
+    }
+    
+    .calendar-date {
+        width: 140px;
+        flex-shrink: 0;
+        font-weight: bold;
+        color: #000;
+    }
+
+    .calendar-desc {
+        color: #000;
+        font-weight: normal;
+    }
+}
